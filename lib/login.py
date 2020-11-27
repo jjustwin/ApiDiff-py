@@ -27,3 +27,4 @@ if __name__ == '__main__':
     print(r.json()['result']['token'])
 
     print ("end")
+
