@@ -31,7 +31,7 @@ class SendRequests():
             else:
                 body_data = eval(apiData["body"].replace("false", "False"))
             type = apiData["type"]
-            v = False
+            # v = False
             if type == "data":
                 body = body_data
             elif type == "json":

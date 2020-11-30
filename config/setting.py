@@ -7,7 +7,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 sys.path.append(BASE_DIR)
 
 # 配置文件
-TEST_CONFIG =  os.path.join(BASE_DIR,"ApiData","config.ini")
+TEST_CONFIG =  os.path.join(BASE_DIR,"database","config.ini")
 # 测试用例模板文件
 SOURCE_FILE = os.path.join(BASE_DIR,"ApiData","DemoAPITestCase.xlsx")
 # excel测试用例结果文件
