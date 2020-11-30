@@ -3,6 +3,7 @@
 __author__ = 'YinJia'
 
 import xlrd
+from config import setting
 
 class ReadExcel():
     """读取excel文件数据"""
@@ -29,3 +30,7 @@ class ReadExcel():
             print("表格是空数据!")
             return None
 
+if __name__ == '__main__':
+    testData = ReadExcel(setting.SOURCE_FILE, "Sheet1").read_data()
+    print(testData)
+    print("wait...")

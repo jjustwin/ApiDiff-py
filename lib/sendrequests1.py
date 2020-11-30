@@ -10,21 +10,22 @@ sys.path.append(os.path.dirname(os.path.dirname(__file__)))
 class SendRequests():
     """发送请求数据"""
 
-    def sendRequests(self, s, cookie, apiData):
+    def sendRequests(self, s, cookie, host, apiData):
         try:
             # 从读取的表格中获取响应的参数作为传递
             method = apiData["method"]
-            url1 = apiData["host1"]
-            url2 = apiData["host2"]
+            url = host
+            # url2 = apiData["host2"]
             api = apiData["API"]
             if apiData["params"] == "":
                 par = None
             else:
                 par = eval(apiData["params"])
             if apiData["headers"] == "":
-                h = None
-            else:
-                h = eval(apiData["headers"])
+                h = {}
+                h['cookie'] = cookie
+            # else:
+            #     h = eval(apiData["headers"])
             if apiData["body"] == "":
                 body_data = None
             else:
@@ -41,14 +42,13 @@ class SendRequests():
             # re = s.request(method=method, url=url, headers=h, params=par, data=body, verify=v)
             # return re
             # 发送请求
+            re = {}
+            print(method, url + api, h, par, body)
             try:
-                re1 = s.request(method=method, url=url1 + api, headers=h, params=par, data=body, verify=v)
+                re = s.request(method=method, url=url + api, headers=h, params=par, data=body, verify=v)
             except Exception as e:
-                print(e, url1 + api, "请求失败")
-            try:
-                re2 = s.request(method=method, url=url2 + api, headers=h, params=par, data=body, verify=v)
-            except Exception as e:
-                print(e, url2 + api, "请求失败")
-            return re1, re2
+                print(e, url + api, "请求失败")
+
+            return re
         except Exception as e:
             print(e)
