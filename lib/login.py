@@ -27,10 +27,10 @@ class Login():
         token = re.json()['result']['token']
         UTitle = re.json()['result']['nick_name']
         user_id = re.json()['result']['user_id']
-        new_cookie = cookie + "; token=" + token + "; token=" + user_id
-        # new_cookie = cookie + "; token=" + token + "; token=" + user_id + "; UTitle=" + UTitle
+        # new_cookie = cookie + "; token=" + token + "; token=" + user_id
+        new_cookie = cookie + "; token=" + token + "; token=" + user_id + "; UTitle=" + UTitle
 
-        return new_cookie
+        return new_cookie.encode('utf-8')
 
         # return re.json()['result']['token']
 
