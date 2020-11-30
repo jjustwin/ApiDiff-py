@@ -8,13 +8,11 @@ from config import setting
 from lib.readexcel import ReadExcel
 from lib.sendrequests import SendRequests
 from lib.login import Login
-
-# from lib.writeexcel import WriteExcel
-
+from lib.writeexcel import WriteExcel
+requests.packages.urllib3.disable_warnings()
 testData = ReadExcel(setting.SOURCE_FILE, "Sheet1").read_data()
 host_t = 'https://t.dental3dcloud.com'
 host_d = 'https://www.dental3dcloud.com'
-
 
 class apiDiff():
     """API比较脚本"""
@@ -37,13 +35,19 @@ class apiDiff():
         print(type(re1),re1,re2,type(re2))
         if re1.json() == re2.json():
             print("接口返回一致======================")
+            OK_data = "PASS"
+            # print("用例测试结果:  {0}---->{1}".format(data['ID'], OK_data))
+            WriteExcel(setting.TARGET_FILE).write_data(rowNum + 1, OK_data, 'PASS')
         if re1.json() != re2.json():
             print(f"请注意, {data['API']} 接口在两套环境中不一致", )
             print(host1, "页面返回信息：%s" % re1.content.decode("utf-8"))
             print(host2, "页面返回信息：%s" % re2.content.decode("utf-8"))
+            NOT_data = "FAIL"
+            # print("用例测试结果:  {0}---->{1}".format(data['ID'], NOT_data))
+            WriteExcel(setting.TARGET_FILE).write_data(rowNum + 1, NOT_data, re1.content.decode("utf-8")+re2.content.decode("utf-8"))
 
 
 if __name__ == '__main__':
-
+    APIDIFF = apiDiff()
     for d in testData:
-        apiDiff().test_api(host_t, host_d, d)
+        APIDIFF.test_api(host_t, host_d, d)
