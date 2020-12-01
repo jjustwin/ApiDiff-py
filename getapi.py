@@ -5769,7 +5769,9 @@ def get_all_case(_apiInfo):
     url = _apiInfo.get("url", "")
     method = _apiInfo.get("type", "")
     data = jsonpath(_apiInfo, "$..parameter.examples..content")
-    data = ast.literal_eval(data[0].replace(",,", ",")) if data else ""
+    data = ast.literal_eval(data[0].replace(",,", ",")) if data else {}
+    if method.lower() == "get":
+        ("采集微服务", group, title, url, method, dumps(data), "", "", "json", 200, "success")
     return ("采集微服务", group, title, url, method, "", "", dumps(data), "json", 200, "success")
 
 
