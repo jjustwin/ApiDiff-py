@@ -41,11 +41,14 @@ class Login():
         # print(self.body)
         re = self.s.request(method=self.method, url=host + self.api_dev, headers=self.h_dev, data=self.body)
         global cookie
-        token = re.json()['result']['Token']
-        UTitle = re.json()['result']['NickName']
-        user_id = re.json()['result']['UserID']
-        # new_cookie = cookie + "; token=" + token + "; token=" + user_id
-        new_cookie = cookie + "; token=" + token + "; token=" + user_id + "; UTitle=" + UTitle
+        if re.text.startswith("{"):
+            token = re.json()['result']['Token']
+            UTitle = re.json()['result']['NickName']
+            user_id = re.json()['result']['UserID']
+            # new_cookie = cookie + "; token=" + token + "; token=" + user_id
+            new_cookie = cookie + "; token=" + token + "; token=" + user_id + "; UTitle=" + UTitle
+        else:
+            return {}
 
         return new_cookie.encode('utf-8')
     # return re.json()['result']['token']

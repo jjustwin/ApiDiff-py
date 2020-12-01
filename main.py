@@ -4,15 +4,18 @@ import os, sys
 
 sys.path.append(os.path.dirname(os.path.dirname(__file__)))
 import requests
+from json import loads
 from config import setting
 from lib.readexcel import ReadExcel
 from lib.sendrequests import SendRequests
 from lib.login import Login
 from lib.writeexcel import WriteExcel
+
 requests.packages.urllib3.disable_warnings()
 testData = ReadExcel(setting.SOURCE_FILE, "Sheet1").read_data()
 host_t = 'https://t.dental3dcloud.com'
-host_d = 'https://www.dental3dcloud.com'
+host_d = 'http://10.10.1.57:7080'
+
 
 class apiDiff():
     """API比较脚本"""
@@ -30,24 +33,25 @@ class apiDiff():
 
         cookie1 = Login().login(host1)
         cookie2 = Login().login_dev(host2)
-        re1 = SendRequests().sendRequests(self.s, cookie1, host1, data)
-        re2 = SendRequests().sendRequests(self.s, cookie2, host2, data)
-        print(type(re1),re1.text,re2.text,type(re2))
-        if re1.json() == re2.json():
-            print("接口返回一致======================")
-            OK_data = "PASS"
-            # print("用例测试结果:  {0}---->{1}".format(data['ID'], OK_data))
-            WriteExcel(setting.TARGET_FILE).write_data(rowNum + 1, OK_data, 'PASS')
-        if re1.json() != re2.json():
-            print(f"请注意, {data['API']} 接口在两套环境中不一致", )
-            print(host1, "页面返回信息：%s" % re1.content.decode("utf-8"))
-            print(host2, "页面返回信息：%s" % re2.content.decode("utf-8"))
-            NOT_data = "FAIL"
-            # print("用例测试结果:  {0}---->{1}".format(data['ID'], NOT_data))
-            WriteExcel(setting.TARGET_FILE).write_data(rowNum + 1, NOT_data, re1.content.decode("utf-8")+re2.content.decode("utf-8"))
+        re1 = SendRequests().sendRequests(self.s, cookie1, host1, data).text
+        re2 = SendRequests().sendRequests(self.s, cookie2, host2, data).text
+        if re1.startswith("{") and re2.startswith("{"):
+            if loads(re1) == loads(re2):
+                print("接口返回一致======================")
+                OK_data = "PASS"
+                # print("用例测试结果:  {0}---->{1}".format(data['ID'], OK_data))
+                WriteExcel(setting.TARGET_FILE).write_data(rowNum + 1, OK_data, 'PASS')
+                return
+        print(f"请注意, {data['API']} 接口在两套环境中不一致", )
+        print(host1, "返回信息：%s" % re1)
+        print(host2, "返回信息：%s" % re2)
+        NOT_data = "FAIL"
+        # print("用例测试结果:  {0}---->{1}".format(data['ID'], NOT_data))
+        WriteExcel(setting.TARGET_FILE).write_data(rowNum + 1, NOT_data,re1 + re2)
 
 
 if __name__ == '__main__':
     APIDIFF = apiDiff()
     for d in testData:
         APIDIFF.test_api(host_t, host_d, d)
+        break

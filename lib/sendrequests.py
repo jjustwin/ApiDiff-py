@@ -42,9 +42,9 @@ class SendRequests():
             # return re
             # 发送请求
             re = {}
-            print(method, url + api, h, par, body)
+            url = url + api
             try:
-                re = s.request(method=method, url=url + api, headers=h, params=par, data=body, verify=v)
+                re = s.request(method=method, url=url, headers=h, params=par, data=body, verify=v)
             except Exception as e:
                 print(e, url + api, "请求失败")
 

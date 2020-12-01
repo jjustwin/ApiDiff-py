@@ -36,7 +36,6 @@ class WriteExcel():
         :param value: 测试结果值
         :return: 无
         """
-        return True
         font_GREEN = Font(name='宋体', color=GREEN, bold=True)
         font_RED = Font(name='宋体', color=RED, bold=True)
         font1 = Font(name='宋体', color=DARKYELLOW, bold=True)
