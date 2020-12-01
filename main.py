@@ -13,7 +13,7 @@ from lib.writeexcel import WriteExcel
 
 requests.packages.urllib3.disable_warnings()
 testData = ReadExcel(setting.SOURCE_FILE, "Sheet1").read_data()
-host_t = 'https://t.dental3dcloud.com'
+host_t = 'https://t.dental3dcloud.com/api'
 host_d = 'http://10.10.1.57:7080'
 
 
@@ -33,6 +33,8 @@ class apiDiff():
 
         cookie1 = Login().login(host1)
         cookie2 = Login().login_dev(host2)
+        if data["module"] in ['采集微服务']:
+            cookie1 = cookie2 = {}
         re1 = SendRequests().sendRequests(self.s, cookie1, host1, data).text
         re2 = SendRequests().sendRequests(self.s, cookie2, host2, data).text
         if re1.startswith("{") and re2.startswith("{"):
@@ -47,7 +49,7 @@ class apiDiff():
         print(host2, "返回信息：%s" % re2)
         NOT_data = "FAIL"
         # print("用例测试结果:  {0}---->{1}".format(data['ID'], NOT_data))
-        WriteExcel(setting.TARGET_FILE).write_data(rowNum + 1, NOT_data,re1 + re2)
+        WriteExcel(setting.TARGET_FILE).write_data(rowNum + 1, NOT_data, re1 + re2)
 
 
 if __name__ == '__main__':

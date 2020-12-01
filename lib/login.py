@@ -6,14 +6,15 @@
 # @File : login.py
 # @Software: PyCharm
 import requests, json
-host_t = 'https://t.dental3dcloud.com'
+
+host_t = 'https://t.dental3dcloud.com/api'
 host_d = 'http://10.10.1.57:7080'
 
 
 class Login():
     s = requests.session()
     method = 'post'
-    api = '/api/login'
+    api = '/login'
     api_dev = '/login'
     global cookie
     cookie = "uuid=20c75426-2034-49ff-a688-fef30cd1914b; cc=CN; lang=zh-cn; oemURL=index; country=CN"
@@ -27,7 +28,9 @@ class Login():
 
     def login(self, host):
         # print(self.body)
+
         re = self.s.request(method=self.method, url=host + self.api, headers=self.h, data=self.body)
+        print(re.text)
         global cookie
         token = re.json()['result']['token']
         UTitle = re.json()['result']['nick_name']

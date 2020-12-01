@@ -5,15 +5,18 @@ __author__ = 'YinJia'
 import xlrd
 from config import setting
 
+
 class ReadExcel():
     """读取excel文件数据"""
-    def __init__(self,fileName, SheetName="Sheet1"):
+
+    def __init__(self, fileName, SheetName="Sheet1"):
         self.data = xlrd.open_workbook(fileName)
         self.table = self.data.sheet_by_name(SheetName)
 
         # 获取总行数、总列数
         self.nrows = self.table.nrows
         self.ncols = self.table.ncols
+
     def read_data(self):
         if self.nrows > 1:
             # 获取第一行的内容，列表格式
@@ -29,6 +32,7 @@ class ReadExcel():
         else:
             print("表格是空数据!")
             return None
+
 
 if __name__ == '__main__':
     testData = ReadExcel(setting.SOURCE_FILE, "Sheet1").read_data()
