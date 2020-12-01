@@ -59,10 +59,10 @@ class WriteExcel():
         self.wb.save(self.filename)
 
     def write_case(self):
-        cases = (get_all_case(info) for info in apiInfo['api'])
+        cases = (get_all_case(info) for info in apiInfo)
         for row, case in enumerate(cases):
             for idx in range(11):
-                self.ws.cell(row + 2, idx + 1, case.__next__())
+                self.ws.cell(row + 2, idx + 1, case[idx])
         self.wb.save(self.filename)
 
 
@@ -70,4 +70,5 @@ if __name__ == '__main__':
     sys.path.append("C:/Users/shining3d/PycharmProjects/ApiDiff-py")
     from getapi import apiInfo, get_all_case
     from config.setting import SOURCE_FILE
-    # WriteExcel(SOURCE_FILE).write_case()
+
+    WriteExcel(SOURCE_FILE).write_case()

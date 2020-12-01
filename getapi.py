@@ -6229,7 +6229,7 @@ def get_all_case(_apiInfo):
     group = _apiInfo.get("group", "")
     url = _apiInfo.get("url", "")
     method = "post"
-    data = jsonpath(_apiInfo, "$..parameter.examples..content")[0]
+    data = jsonpath(_apiInfo, "$..parameter.examples..content")[0].replace(",,",",")
     return ("采集微服务", group, title, url, method, "", "", dumps(ast.literal_eval(data)), "json", 200, "success")
 
 if __name__ == '__main__':
