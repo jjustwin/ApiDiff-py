@@ -36,6 +36,7 @@ class WriteExcel():
         :param value: 测试结果值
         :return: 无
         """
+        return True
         font_GREEN = Font(name='宋体', color=GREEN, bold=True)
         font_RED = Font(name='宋体', color=RED, bold=True)
         font1 = Font(name='宋体', color=DARKYELLOW, bold=True)
@@ -56,3 +57,17 @@ class WriteExcel():
         self.ws[M_n].font = font1
         self.ws[M_n].alignment = align
         self.wb.save(self.filename)
+
+    def write_case(self):
+        cases = (get_all_case(info) for info in apiInfo['api'])
+        for row, case in enumerate(cases):
+            for idx in range(11):
+                self.ws.cell(row + 2, idx + 1, case.__next__())
+        self.wb.save(self.filename)
+
+
+if __name__ == '__main__':
+    sys.path.append("C:/Users/shining3d/PycharmProjects/ApiDiff-py")
+    from getapi import apiInfo, get_all_case
+    from config.setting import SOURCE_FILE
+    # WriteExcel(SOURCE_FILE).write_case()

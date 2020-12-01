@@ -3,7 +3,7 @@ __author__ = 'tjw'
 import os, sys
 
 sys.path.append(os.path.dirname(os.path.dirname(__file__)))
-import unittest, requests, ddt
+import requests
 from config import setting
 from lib.readexcel import ReadExcel
 from lib.sendrequests import SendRequests
@@ -29,10 +29,10 @@ class apiDiff():
         # 发送请求
 
         cookie1 = Login().login(host1)
-        cookie2 = Login().login(host2)
+        cookie2 = Login().login_dev(host2)
         re1 = SendRequests().sendRequests(self.s, cookie1, host1, data)
         re2 = SendRequests().sendRequests(self.s, cookie2, host2, data)
-        print(type(re1),re1,re2,type(re2))
+        print(type(re1),re1.text,re2.text,type(re2))
         if re1.json() == re2.json():
             print("接口返回一致======================")
             OK_data = "PASS"

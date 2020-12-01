@@ -24,8 +24,8 @@ class SendRequests():
             if apiData["headers"] == "":
                 h = {}
                 h['cookie'] = cookie
-            # else:
-            #     h = eval(apiData["headers"])
+            else:
+                h = eval(apiData["headers"])
             if apiData["body"] == "":
                 body_data = None
             else:
