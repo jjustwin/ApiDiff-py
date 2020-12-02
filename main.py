@@ -12,8 +12,8 @@ from lib.login import Login
 from lib.writeexcel import WriteExcel
 
 requests.packages.urllib3.disable_warnings()
-testData = ReadExcel(setting.SOURCE_FILE, "Sheet1").read_data()
-host_t = 'https://t.dental3dcloud.com/api'
+testData = ReadExcel(setting.SOURCE_FILE_dental, "Sheet1").read_data()
+host_t = 'https://tapi.shining3d.com'
 host_d = 'http://10.10.1.57:7080'
 
 
@@ -42,14 +42,14 @@ class apiDiff():
                 print("接口返回一致======================")
                 OK_data = "PASS"
                 # print("用例测试结果:  {0}---->{1}".format(data['ID'], OK_data))
-                WriteExcel(setting.TARGET_FILE).write_data(rowNum + 1, OK_data, 'PASS')
+                WriteExcel(setting.TARGET_FILE_dental).write_data(rowNum + 1, OK_data, 'PASS')
                 return
         print(f"请注意, {data['API']} 接口在两套环境中不一致", )
         print(host1, "返回信息：%s" % re1)
         print(host2, "返回信息：%s" % re2)
         NOT_data = "FAIL"
         # print("用例测试结果:  {0}---->{1}".format(data['ID'], NOT_data))
-        WriteExcel(setting.TARGET_FILE).write_data(rowNum + 1, NOT_data, re1 + re2)
+        WriteExcel(setting.TARGET_FILE_dental).write_data(rowNum + 1, NOT_data, re1 + re2)
 
 
 if __name__ == '__main__':

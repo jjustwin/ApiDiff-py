@@ -7,7 +7,7 @@
 # @Software: PyCharm
 import requests, json
 
-host_t = 'https://t.dental3dcloud.com/api'
+host_t = 'https://tapi.shining3d.com'
 host_d = 'http://10.10.1.57:7080'
 
 
