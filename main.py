@@ -19,7 +19,7 @@ host_t = cf.get("server", "host_t")
 host_d = cf.get("server", "host_d")
 
 requests.packages.urllib3.disable_warnings()
-testData = ReadExcel(setting.SOURCE_FILE_dental, "Sheet1").read_data()
+testData = ReadExcel(setting.SOURCE_FILE, "Sheet1").read_data()
 # host_t = 'https://tapi.shining3d.com'
 # host_d = 'http://10.10.1.57:7080'
 
@@ -43,8 +43,9 @@ class apiDiff():
             token_t = token_d = ''
         re_t = SendRequests().sendRequests(self.s, token_t, host1, data).text
         re_d = SendRequests().sendRequests(self.s, token_d, host2, data).text
+
         if re_t.startswith("{") and re_d.startswith("{"):
-            if loads(re_t) == loads(re_d):
+            if loads(re_t) == loads(re_d) and isinstance(loads(re_t),str) and loads(re_d.get("status") == "success"):
                 print("接口返回一致======================")
                 OK_data = "PASS"
                 # print("用例测试结果:  {0}---->{1}".format(data['ID'], OK_data))
@@ -55,7 +56,7 @@ class apiDiff():
         print(host2, "返回信息：%s" % re_d)
         NOT_data = "FAIL"
         # print("用例测试结果:  {0}---->{1}".format(data['ID'], NOT_data))
-        WriteExcel(setting.TARGET_FILE_dental).write_data(rowNum + 1, NOT_data, re_t + re_d)
+        WriteExcel(setting.TARGET_FILE).write_data(rowNum + 1, NOT_data, re_t + re_d)
 
 
 if __name__ == '__main__':
