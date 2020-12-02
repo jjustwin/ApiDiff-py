@@ -29,7 +29,7 @@ class SendRequests():
             if apiData["body"] == "":
                 body_data = None
             else:
-                body_data = eval(apiData["body"].replace("false", "False"))
+                body_data = eval(apiData["body"].replace("false", "False").replace("true", "True"))
             type = apiData["type"]
             v = False
             if type == "data":
@@ -44,10 +44,10 @@ class SendRequests():
             re = {}
             url = url + api
             try:
+                print(f"请求body内容为：{method}  {url}  {h}  {par}")
                 re = s.request(method=method, url=url, headers=h, params=par, data=body, verify=v)
             except Exception as e:
                 print(e, url + api, "请求失败")
-
             return re
         except Exception as e:
             print(e)

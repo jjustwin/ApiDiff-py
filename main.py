@@ -28,7 +28,6 @@ class apiDiff():
         print("******* 正在执行接口 ->{0} *********".format(data['ID']))
         # print("请求方式: {0}，请求URL: {1}".format(data['method'], data['host1']))
         print("请求参数: {0}".format(data['params']))
-        print("post请求body类型为：{0} ,body内容为：{1}".format(data['type'], data['body']))
         # 发送请求
 
         cookie1 = Login().login(host1)
@@ -38,7 +37,7 @@ class apiDiff():
         re1 = SendRequests().sendRequests(self.s, cookie1, host1, data).text
         re2 = SendRequests().sendRequests(self.s, cookie2, host2, data).text
         if re1.startswith("{") and re2.startswith("{"):
-            if loads(re1) == loads(re2):
+            if loads(re1) == loads(re2) and loads(re1).get("status","fail") == "success":
                 print("接口返回一致======================")
                 OK_data = "PASS"
                 # print("用例测试结果:  {0}---->{1}".format(data['ID'], OK_data))
@@ -56,4 +55,3 @@ if __name__ == '__main__':
     APIDIFF = apiDiff()
     for d in testData:
         APIDIFF.test_api(host_t, host_d, d)
-        break
