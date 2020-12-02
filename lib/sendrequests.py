@@ -10,7 +10,7 @@ sys.path.append(os.path.dirname(os.path.dirname(__file__)))
 class SendRequests():
     """发送请求数据"""
 
-    def sendRequests(self, s, cookie, host, apiData):
+    def sendRequests(self, s, token, host, apiData):
         try:
             # 从读取的表格中获取响应的参数作为传递
             method = apiData["method"]
@@ -23,7 +23,9 @@ class SendRequests():
                 par = eval(apiData["params"])
             if apiData["headers"] == "":
                 h = {}
-                h['cookie'] = cookie
+                h['X-Auth-Token'] = token
+                h['X-Auth-AppId'] = '2d274d917e32a1188f39ba102bc378da'
+
             else:
                 h = eval(apiData["headers"])
             if apiData["body"] == "":
