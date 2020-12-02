@@ -48,11 +48,11 @@ class SendRequests():
             if ":" in api:
                 # 设定val,从par或者body取值
                 val = par if par else body if body else {}
-                # 根据/:分割出key，
+                # 根据/:分割出key
                 api_back = api.split("/:")[1:]
                 # 遍历,从val中取值替换
                 for key in api_back:
-                    url = url.replace(key, val.get(key, ""))
+                    url = url.replace(key, val.get(key, ""), 1)
             url = url + api
             try:
                 print(f"请求body内容为：{method}  {url}  {h}  {par}")
