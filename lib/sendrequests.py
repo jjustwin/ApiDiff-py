@@ -38,12 +38,21 @@ class SendRequests():
                 body = body_data
             elif type == "json":
                 body = json.dumps(body_data)
+                h.update({"content-type": "application/json"})
             else:
                 body = body_data
             # re = s.request(method=method, url=url, headers=h, params=par, data=body, verify=v)
             # return re
             # 发送请求
             re = {}
+            if ":" in api:
+                # 设定val,从par或者body取值
+                val = par if par else body if body else {}
+                # 根据/:分割出key，
+                api_back = api.split("/:")[1:]
+                # 遍历,从val中取值替换
+                for key in api_back:
+                    url = url.replace(key, val.get(key, ""))
             url = url + api
             try:
                 print(f"请求body内容为：{method}  {url}  {h}  {par}")
