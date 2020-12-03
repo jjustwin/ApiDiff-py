@@ -50,12 +50,17 @@ class SendRequests():
                 val = par if par else body if body else {}
                 # 根据/:分割出key
                 api_back = api.split("/:")[1:]
+                # print("api_back:", api_back)
                 # 遍历,从val中取值替换
                 for key in api_back:
-                    url = url.replace(key, val.get(key, ""), 1)
+                    # print("the value of the ", key ,"is :",val.get(key, ""))
+                    api = api.replace(key, val.get(key, ""), 1)
+                    # print("this key is :",key,"the api is: ",api)
+
+            api = api.replace(":", "")
             url = url + api
             try:
-                print(f"请求body内容为：{method}  {url}  {h}  {par}")
+                print(f"请求内容为：{method}  {url}  {h}  {par} {body}")
                 re = s.request(method=method, url=url, headers=h, params=par, data=body, verify=v)
             except Exception as e:
                 print(e, url + api, "请求失败")

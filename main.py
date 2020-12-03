@@ -20,46 +20,74 @@ host_d = cf.get("server", "host_d")
 
 requests.packages.urllib3.disable_warnings()
 testData = ReadExcel(setting.SOURCE_FILE, "Sheet1").read_data()
+# 关系网ID
+tid = ''
+# 机构ID
+targetID = ''
+userID = ''
+
 # host_t = 'https://tapi.shining3d.com'
 # host_d = 'http://10.10.1.57:7080'
-
+relvance={}
 
 class apiDiff():
     """API比较脚本"""
 
     s = requests.session()
 
-    def test_api(self, host1, host2, data):
+    def test_api(self, host1, host2, token_t, token_d, data):
         # 获取ID字段数值，截取结尾数字并去掉开头0
-        rowNum = int(data['ID'].split("_")[2])
-        print("******* 正在执行接口 ->{0} *********".format(data['ID']))
+        try:
+            rowNum = int(data['ID'].split("_")[2])
+        except Exception as e:
+            print(e)
+
+        print("******* 正在请求第{0}个接口->:{1} API_URL->:{2} *********".format(rowNum, data['UseCase'], data['API']))
         # print("请求方式: {0}，请求URL: {1}".format(data['method'], data['host1']))
-        print("请求参数: {0}".format(data['params']))
+        # print("请求参数: {0}".format(data['params']))
         # 发送请求
 
-        token_t = Login().login(host1)
-        token_d = Login().login(host2)
+        # token_t = Login().login(host1)
+        # token_d = Login().login(host2)
         if data["module"] in ['采集微服务']:
             token_t = token_d = ''
+        print("******* 正在请求测试环境接口 *********")
+
         re_t = SendRequests().sendRequests(self.s, token_t, host1, data).text
+
+
+        print("******* 正在请求开发环境接口 *********")
         re_d = SendRequests().sendRequests(self.s, token_d, host2, data).text
 
         if re_t.startswith("{") and re_d.startswith("{"):
-            if loads(re_t) == loads(re_d) and isinstance(loads(re_t),str) and loads(re_d.get("status") == "success"):
+            if loads(re_t) == loads(re_d) and isinstance(loads(re_t), str) and loads(re_d.get("status") == "success"):
                 print("接口返回一致======================")
                 OK_data = "PASS"
+                print("******* 正在请求第{0}个接口请求完成*********\n".format(rowNum))
                 # print("用例测试结果:  {0}---->{1}".format(data['ID'], OK_data))
-                WriteExcel(setting.TARGET_FILE_dental).write_data(rowNum + 1, OK_data, 'PASS')
-                return
-        print(f"请注意, {data['API']} 接口在两套环境中不一致", )
+                WriteExcel(setting.TARGET_FILE).write_data(rowNum + 1, OK_data, 'PASS')
+                return 'Pass'
         print(host1, "返回信息：%s" % re_t)
         print(host2, "返回信息：%s" % re_d)
+        print(f"请注意, {data['API']} 接口在两套环境中不一致", )
+        print("******* 第{0}个接口请求完成*********\n".format(rowNum))
         NOT_data = "FAIL"
         # print("用例测试结果:  {0}---->{1}".format(data['ID'], NOT_data))
-        WriteExcel(setting.TARGET_FILE).write_data(rowNum + 1, NOT_data, re_t + re_d)
+        WriteExcel(setting.TARGET_FILE).write_data(rowNum + 1, NOT_data, re_t, re_d)
+        return 'FAIL'
 
 
 if __name__ == '__main__':
     APIDIFF = apiDiff()
-    for d in testData:
-        APIDIFF.test_api(host_t, host_d, d)
+    token_t = Login().login(host_t)
+    token_d = Login().login(host_d)
+    sum_pass = 0
+    sum_fail = 0
+    for d in testData[0:1]:
+        result = APIDIFF.test_api(host_t, host_d, token_t, token_d, d)
+        if result == 'PASS':
+            sum_pass = sum_pass + 1
+        else:
+            sum_fail = sum_fail + 1
+    print("本次共请求{0}个接口，接口响应一致的{1}个，接口响应不一致的{2}个".format(sum_pass + sum_fail, sum_pass, sum_fail))
+    # APIDIFF.test_api(host_t, host_d, token_t, token_d, testData[32])
