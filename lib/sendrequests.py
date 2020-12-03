@@ -26,7 +26,6 @@ class SendRequests():
                 h = {}
                 h['X-Auth-Token'] = token
                 h['X-Auth-AppId'] = '2d274d917e32a1188f39ba102bc378da'
-
             else:
                 h = eval(apiData["headers"])
             if apiData["body"] == "":
