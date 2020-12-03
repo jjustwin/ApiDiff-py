@@ -29,7 +29,7 @@ class WriteExcel():
         self.wb = load_workbook(self.filename)
         self.ws = self.wb.active
 
-    def write_data(self, row_n, value, diff_info):
+    def write_data(self, row_n, value, re_t, re_d):
         """
         写入测试结果
         :param row_n:数据所在行数
@@ -49,7 +49,8 @@ class WriteExcel():
         if value == "FAIL":
             self.ws.cell(row_n, 12, value)
             self.ws[L_n].font = font_RED
-            self.ws.cell(row_n, 13, diff_info)
+            self.ws.cell(row_n, 13, re_t)
+            self.ws.cell(row_n, 14, re_d)
             self.ws[L_n].font = font_RED
         # self.ws.cell(row_n, 14, name)
         self.ws[L_n].alignment = align

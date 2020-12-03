@@ -20,14 +20,15 @@ class Login():
     s = requests.session()
     method = 'post'
     api = '/login'
-    api_dev = '/login'
-    global cookie
-    cookie = "uuid=20c75426-2034-49ff-a688-fef30cd1914b; cc=CN; lang=zh-cn; oemURL=index; country=CN"
-    headers = '{"cookie":"uuid=20c75426-2034-49ff-a688-fef30cd1914b; cc=CN; lang=zh-cn; oemURL=index; country=CN"}'
-    h = json.loads(headers)
-    h_dev = h
-    h_dev['X-Auth-AppId'] = '2d274d917e32a1188f39ba102bc378da'
-    body_data = {"loginType": "dental-cloud", "username": "victor@shining3d.com", "password": "111111", "rPwd": False,
+    # api_dev = '/login'
+    # global cookie
+    # cookie = "uuid=20c75426-2034-49ff-a688-fef30cd1914b; cc=CN; lang=zh-cn; oemURL=index; country=CN"
+    # headers = '{"cookie":"uuid=20c75426-2034-49ff-a688-fef30cd1914b; cc=CN; lang=zh-cn; oemURL=index; country=CN"}'
+    # h = json.loads(headers)
+    # h_dev = h
+    h = {}
+    h['X-Auth-AppId'] = '2d274d917e32a1188f39ba102bc378da'
+    body_data = {"loginType": "adminapi", "username": "victor@shining3d.com", "password": "111111", "rPwd": False,
                  "phoneArea": "86"}
     body = json.dumps(body_data)
 
@@ -35,7 +36,7 @@ class Login():
         # print(self.body)
 
         re = self.s.request(method=self.method, url=host + self.api, headers=self.h, data=self.body)
-        print(re.text)
+        # print(re.text)
         global cookie
         if host == host_t:
             token = re.json()['result']['token']
