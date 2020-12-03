@@ -7,13 +7,13 @@ import re
 import jsonpath
 
 
-# from bin.unit import funcionTools
+# from bin.unit import functionTools
 
 def replace(param, relvance:dict):
     """
     替换关联数据
     :param param: 请求参数
-    :param relevance: 关联对象
+    :param relvance: 关联对象
     :return:
     """
     # 判断数据类型
@@ -22,11 +22,11 @@ def replace(param, relvance:dict):
         for key, value in param.items():
             # 如果value是个字典，就递归自己
             if isinstance(value, dict):
-                param[key] = replace(value, relevance)
+                param[key] = replace(value, relvance)
             # 如果value是个列表，就循环递归
             elif isinstance(value, list):
                 for k, i in enumerate(value):
-                    param[key][k] = replace(i, relevance)
+                    param[key][k] = replace(i, relvance)
             else:
                 try:
                     # 正则匹配到所有的$(XXX)关键字
@@ -37,7 +37,7 @@ def replace(param, relvance:dict):
                         n = n.lower()
                         try:
                             # 从relvance中匹配关键字对应的依赖数据，用正则替换
-                            param[key] = re.sub(pattern, str(relevance[n]), param[key], count=1)
+                            param[key] = re.sub(pattern, str(relvance[n]), param[key], count=1)
                         except KeyError:
                             pass
                     # 上面替换完关键字后，判断是否存在**关键字
@@ -64,7 +64,7 @@ def replace(param, relvance:dict):
 
     elif isinstance(param, list):
         for k, i in enumerate(param):
-            param[k] = replace(i, relevance)
+            param[k] = replace(i, relvance)
     else:
         try:
             relevance_list = re.findall(r"\${(.*?)}", param)
@@ -72,10 +72,10 @@ def replace(param, relvance:dict):
                 pattern = re.compile(r'\${' + n + r'}')
                 n = n.lower()
                 try:
-                    if isinstance(relevance[n], list):
-                        param = re.sub(pattern, relevance[n], param, count=1)
+                    if isinstance(relvance[n], list):
+                        param = re.sub(pattern, relvance[n], param, count=1)
                     else:
-                        param = re.sub(pattern, relevance[n], param)
+                        param = re.sub(pattern, relvance[n], param)
                 except KeyError:
                     pass
         except TypeError:
@@ -118,7 +118,7 @@ def get_value(data, value):
             else:
                 v = v[0]
         # 使用jsonpath提值，成功返回一个值列表，不成功返回False
-        result = jsonpath.jsonpath(data, v)
+        result = jsonpath.jsonpath(eval(data.replace("true","True").replace("false","False")), v)
         # 判断提取是否成功，成功就往全局数据池中添加下标对应的值
         if result:
             relvance[k.lower()] = result[index]

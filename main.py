@@ -55,25 +55,30 @@ class apiDiff():
         if data["module"] in ['采集微服务']:
             token_t = token_d = ''
         print("******* 正在请求测试环境接口 *********")
-
-        re_t = SendRequests().sendRequests(self.s, token_t, host1, data).text
-
-
-        print("******* 正在请求开发环境接口 *********")
         re_t = SendRequests().sendRequests(self.s, token_t, host1, replace(data, relvance_t)).text
+        # re_t = SendRequests().sendRequests(self.s, token_t, host1, data).text
+        print("******* 正在请求开发环境接口 *********")
         re_d = SendRequests().sendRequests(self.s, token_d, host2, replace(data, relvance_d)).text
 
         if re_t.startswith("{") and re_d.startswith("{") and isinstance(loads(re_t), str):
             if loads(re_d.get("status") == "success"):
-                relvance_t.update(get_value(re_t, data["relvance"]))
-                relvance_d.update(get_value(re_d, data["relvance"]))
+                if data["relvance"] != "":
+                    relvance_t.update(get_value(re_t, eval(data["relvance"])))
+                if data["relvance"] != "":
+                    relvance_d.update(get_value(re_d, eval(data["relvance"])))
                 if loads(re_t) == loads(re_d):
                     print("接口返回一致======================")
                     OK_data = "PASS"
                     print("******* 正在请求第{0}个接口请求完成*********\n".format(rowNum))
                     # print("用例测试结果:  {0}---->{1}".format(data['ID'], OK_data))
-                    WriteExcel(setting.TARGET_FILE_dental).write_data(rowNum + 1, OK_data, 'PASS')
+                    WriteExcel(setting.TARGET_FILE).write_data(rowNum + 1, OK_data, 'PASS')
                     return 'Pass'
+        if re_t.startswith("{"):
+            if data["relvance"] != "":
+                relvance_t.update(get_value(re_t, eval(data["relvance"])))
+        if re_t.startswith("{"):
+            if data["relvance"] != "":
+                relvance_d.update(get_value(re_d, eval(data["relvance"])))
         print(host1, "返回信息：%s" % re_t)
         print(host2, "返回信息：%s" % re_d)
         print(f"请注意, {data['API']} 接口在两套环境中不一致", )
@@ -90,7 +95,7 @@ if __name__ == '__main__':
     token_d = Login().login(host_d)
     sum_pass = 0
     sum_fail = 0
-    for d in testData[0:1]:
+    for d in testData[:35]:
         result = APIDIFF.test_api(host_t, host_d, token_t, token_d, d)
         if result == 'PASS':
             sum_pass = sum_pass + 1
