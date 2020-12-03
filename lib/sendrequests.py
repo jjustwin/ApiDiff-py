@@ -3,6 +3,7 @@
 __author__ = 'YinJia'
 
 import os, sys, json
+from uuid import uuid1
 
 sys.path.append(os.path.dirname(os.path.dirname(__file__)))
 
@@ -32,6 +33,8 @@ class SendRequests():
                 body_data = None
             else:
                 body_data = eval(apiData["body"].replace("false", "False").replace("true", "True"))
+                if "fingerprint" in body_data:
+                    body_data["fingerprint"] = str(uuid1())
             type = apiData["type"]
             v = False
             if type == "data":

@@ -1,13 +1,15 @@
+# coding:utf-8
+
 false = False
 true = True
 apiInfo = [
     {
         "type": "post",
-        "url": "/activeDD",
-        "title": "齿科设备激活接口",
-        "description": "<p>urlName: activeDD</p>",
-        "group": "dental/device",
-        "name": "activeDD",
+        "url": "/ed/apply",
+        "title": "5加解密授权申请审核接口",
+        "description": "<p>urlName: applyED 集成方在未激活、已注销但在有效期内时才能调用 \\</p> <ol> <li>如果未激活状态，则返回成功； \\</li> <li>如果已经申请但在审核中，同台设备提示审核中(waitingAudit)否则提示非法(illegal)； \\</li> <li>如果已经申请且待激活确认，同台设备则返回(waitActive)，集成方应该调用加解密授权激活下载及获取审核结果接口，非同台设备提示非法(illegal)； \\</li> <li>如果已激活且在有效期内，同台则提示(actived)，非同台设备提示非法(illegal)； \\</li> <li>如果已激活且不在有效期内，则返回成功； \\</li> <li>如果已注销且在有效期内，同台则返回成功，否则返回(waitActive)，集成方应该调用加解密授权激活下载及获取审核结果接口； \\</li> <li>如果已注销且不在有效期内，则返回成功； \\</li> <li>如果激活不存在，则返回(notExist); \\</li> <li>如果不是上述的值，则返回请求格式错误(http的statusCode是400)或者是未知错误(unknown) \\</li> <li>如果已不在有效期内，则返回成功；</li> </ol>",
+        "group": "EncryptDecrypt",
+        "name": "applyED",
         "header": {
             "fields": {
                 "Header": [
@@ -29,238 +31,91 @@ apiInfo = [
                         "type": "String",
                         "optional": false,
                         "field": "modelCode",
-                        "description": "<p>设备型号唯一名</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": false,
-                        "field": "serialNum",
-                        "description": "<p>设备序列号且必须是入库记录中有的</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": false,
-                        "field": "softModelCode",
-                        "description": "<p>软件型号唯一名</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": false,
-                        "field": "ver",
-                        "description": "<p>软件版本</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "Object",
-                        "optional": false,
-                        "field": "osSoftExt",
-                        "description": "<p>系统扩展信息对象</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": false,
-                        "field": "osName",
-                        "description": "<p>系统名称</p>"
+                        "description": "<p>约定的唯一型号名，比如solidEdge，一般是集成软件的约定名称或是产品线指定的设备唯一型号名</p>"
                     },
                     {
                         "group": "Parameter",
                         "type": "String",
                         "optional": true,
-                        "field": "hostName",
-                        "description": "<p>主机名</p>"
+                        "field": "deviceModelCode",
+                        "description": "<p>约定的设备唯一型号名，比如einscan</p>"
                     },
                     {
                         "group": "Parameter",
                         "type": "String",
                         "optional": true,
-                        "field": "osType",
-                        "description": "<p>操作系统类型</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": true,
-                        "field": "osVersion",
-                        "description": "<p>操作系统版本</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": true,
-                        "field": "lang",
-                        "description": "<p>系统语言，来自标准的https://www.science.co.il/language/Locale-codes.php，codePage值或是LCID String</p>"
+                        "field": "deviceSN",
+                        "description": "<p>设备序列号</p>"
                     },
                     {
                         "group": "Parameter",
                         "type": "String",
                         "optional": false,
-                        "field": "resolution",
-                        "description": "<p>分辨率，以*分隔</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": true,
-                        "field": "installPath",
-                        "description": "<p>安装路径，指电脑本地路径</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "Object",
-                        "optional": true,
-                        "field": "browser",
-                        "description": "<p>默认浏览器信息对象</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": true,
-                        "field": "name",
-                        "description": "<p>默认浏览器名称</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "Object",
-                        "optional": false,
-                        "field": "osHdExt",
-                        "description": "<p>硬件扩展信息对象</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "[]Object",
-                        "optional": false,
-                        "field": "cpu",
-                        "description": "<p>cpu对象</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "Integer",
-                        "optional": false,
-                        "field": "cpuCores",
-                        "description": "<p>cpu核数</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": false,
-                        "field": "cpuModel",
-                        "description": "<p>cpu型号</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": true,
-                        "field": "cpuVendor",
-                        "description": "<p>cpu品牌</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "[]Object",
-                        "optional": false,
-                        "field": "gpu",
-                        "description": "<p>gpu对象</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": false,
-                        "field": "gpuModel",
-                        "description": "<p>gpu型号</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "Integer",
-                        "optional": false,
-                        "field": "gpuMemSize",
-                        "description": "<p>gpu内存大小，单位是byte</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": true,
-                        "field": "gpuVendor",
-                        "description": "<p>gpu品牌</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "Integer",
-                        "optional": false,
-                        "field": "memSize",
-                        "description": "<p>内存大小，单位是byte</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "Integer",
-                        "optional": false,
-                        "field": "hddSize",
-                        "description": "<p>硬盘大小，单位是byte</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "Integer",
-                        "optional": false,
-                        "field": "hddRemainSize",
-                        "description": "<p>硬盘分区剩余大小，单位是byte</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "Object",
-                        "optional": true,
-                        "field": "modularExt",
-                        "description": "<p>配件或硬件扩展信息对象</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": true,
-                        "field": "ple",
-                        "description": "<p>加密串号</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "[]Object",
-                        "optional": true,
-                        "field": "modular",
-                        "description": "<p>模块对象</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": true,
-                        "field": "mple",
-                        "description": "<p>加密串号</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": true,
                         "field": "sn",
-                        "description": "<p>序列号</p>"
+                        "description": "<p>SolidEdge的激活码，如果不是solidEdge则是设备的序列号</p>"
                     },
                     {
                         "group": "Parameter",
                         "type": "String",
-                        "optional": true,
-                        "field": "validTo",
-                        "description": "<p>有效期截止时间</p>"
+                        "optional": false,
+                        "field": "fingerprint",
+                        "description": "<p>SolidEdge运行电脑或是设备的指纹</p>"
                     },
                     {
                         "group": "Parameter",
-                        "type": "Bool",
-                        "optional": true,
-                        "field": "status",
-                        "description": "<p>状态，是启用还是禁用状态,true/false</p>"
+                        "type": "String",
+                        "optional": false,
+                        "field": "name",
+                        "description": "<p>姓名</p>"
+                    },
+                    {
+                        "group": "Parameter",
+                        "type": "String",
+                        "optional": false,
+                        "field": "company",
+                        "description": "<p>公司</p>"
+                    },
+                    {
+                        "group": "Parameter",
+                        "type": "String",
+                        "optional": false,
+                        "field": "telephone",
+                        "description": "<p>电话</p>"
+                    },
+                    {
+                        "group": "Parameter",
+                        "type": "String",
+                        "optional": false,
+                        "field": "email",
+                        "description": "<p>邮箱</p>"
+                    },
+                    {
+                        "group": "Parameter",
+                        "type": "String",
+                        "optional": false,
+                        "field": "country",
+                        "description": "<p>国家</p>"
+                    },
+                    {
+                        "group": "Parameter",
+                        "type": "String",
+                        "optional": false,
+                        "field": "addr",
+                        "description": "<p>地址</p>"
+                    },
+                    {
+                        "group": "Parameter",
+                        "type": "String",
+                        "optional": false,
+                        "field": "industry",
+                        "description": "<p>行业</p>"
                     }
                 ]
             },
             "examples": [
                 {
                     "title": "Request-Example:",
-                    "content": "{\n\t \"modelCode\": \"xxx\",\n\t \"serialNum\": \"xxx\",\n\t \"softModelCode\": \"xxx\",\n\t \"ver\": \"xxx\",\n    \"osSoftExt\":{\n        \"osName\":\"mac\",\n        \"hostName\":\"xxx\",\n        \"osType\":\"xxx\",\n        \"osVersion\":\"xxx\",\n        \"lang\":\"cn\",\n        \"resolution\":\"2478*1468\",\n        \"installPath\":\"afsdasd\",\n        \"browser\":{\n            \"name\":\"chrome\",\n            \"ver\":\"54.98\"\n        }\n    },\n    \"osHdExt\":{\n        \"cpu\":[{\n            \"cpuCores\":8,\n            \"cpuModel\":\"xeon\"\n        }],\n        \"memSize\":8096,\n        \"gpu\":[{\n            \"gpuModel\":\"intel hd4000\",\n            \"gpuMemSize\": 3900987777\n        }],\n        \"hddSize\":7866555,\n        \"hddRemainSize\":98792323232\n    },\n    \"modularExt\":{\n        \"ple\":\"588ea5a2b4fa8c29759e579d-V200.ple\",\n        \"modular\": [\n\t\t\t{\n\t\t\t\t\"name\":\"xxx\",\n\t\t\t\t\"sn\":\"xxx\",\n\t\t\t\t\"validTo\":\"xxx\",\n\t\t\t\t\"status\":false,\n\t\t\t\t\"mple\":\"xxx\"\n\t\t\t}\n        ]\n    }\n}",
+                    "content": "{\n\t\"modelCode\": \"xxxx\",\n\t\"sn\": \"xxxx\",\n\t\"fingerprint\":\"xxx\",\n\t\"deviceModelCode\": \"xxxx\",\n\t\"deviceSN\": \"xxxx\",\n\t\"industry\":\"xxx\",\n\t\"addr\":\"xxx\",\n\t\"country\":\"xxx\",\n\t\"email\":\"xxx\",\n\t\"telephone\":\"xxx\",\n\t\"company\":\"xxx\",\n\t\"name\":\"xxx\"\n}",
                     "type": "json"
                 }
             ]
@@ -269,31 +124,59 @@ apiInfo = [
             "examples": [
                 {
                     "title": "Success-Response",
-                    "content": "{\n    \"status\": \"success\",\n    \"result\":  \"\"\n}",
+                    "content": "{\n    \"status\": \"success\",\n    \"result\": \"\"\n}",
                     "type": "json"
                 }
             ]
         },
         "error": {
+            "fields": {
+                "Error 4xx": [
+                    {
+                        "group": "Error 4xx",
+                        "optional": false,
+                        "field": "notExist",
+                        "description": "<p>表示不存在，挂在SN字段下</p>"
+                    },
+                    {
+                        "group": "Error 4xx",
+                        "optional": false,
+                        "field": "illegal",
+                        "description": "<p>表示非法，挂在SN字段下</p>"
+                    },
+                    {
+                        "group": "Error 4xx",
+                        "optional": false,
+                        "field": "serverErr",
+                        "description": "<p>表示服务器错误，挂在SN字段下</p>"
+                    },
+                    {
+                        "group": "Error 4xx",
+                        "optional": false,
+                        "field": "unknown",
+                        "description": "<p>表示未知错误，挂在SN字段下</p>"
+                    }
+                ]
+            },
             "examples": [
                 {
                     "title": "Error-Response:",
-                    "content": "{\n    \"status\": \"fail\",\n    \"result\": \"{\\\"password\\\":\\\"password not match.\\\"}\"\n    }\n}",
+                    "content": "{\n    \"status\": \"fail\",\n    \"result\": \"{\\\"SN\\\":\\\"notExist\\\"}\"\n    }\n}",
                     "type": "json"
                 }
             ]
         },
         "version": "0.0.0",
-        "filename": "services/tracing.go",
-        "groupTitle": "dental/device"
+        "filename": "services/ed.go",
+        "groupTitle": "EncryptDecrypt"
     },
     {
         "type": "post",
-        "url": "/dtta?type=form",
-        "title": "定制表单结果提交",
-        "description": "<p>urlName: tracing  推送的定制表单，在用户提交后得到的结果</p>",
-        "group": "push",
-        "name": "formTracing",
+        "url": "/ed/status",
+        "title": "4加解密授权状态查询接口",
+        "description": "<p>urlName: statusED 集成方在启动时调用，接口对sn、指纹、解密内容结合有效期、状态进行判断： \\</p> <ul> <li>unactived状态：调用激活申请接口 \\</li> <li>waitingAudit待审核中：提示用户，如果着急可以联系XXX \\</li> <li>waitActive：调用激活下载接口 \\</li> <li>notExist：提示用户并调用激活申请接口 \\</li> <li>inValid：表示已经注销，则可以调用激活申请接口 \\</li> <li>illegal：提示用户该序列号已经用在其它设备上 \\</li> <li>unknown：提示用户遇到问题，稍候再试 \\</li> <li>serverErr 表示服务器错误，稍候再试 \\</li> <li>拿到状态完整信息并保存本地</li> </ul>",
+        "group": "EncryptDecrypt",
+        "name": "statusED",
         "header": {
             "fields": {
                 "Header": [
@@ -310,2503 +193,262 @@ apiInfo = [
         "parameter": {
             "fields": {
                 "Parameter": [
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": true,
-                        "field": "modelName",
-                        "description": "<p>软硬件名称，是在型号管理中约定的唯一名</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": true,
-                        "field": "serialNum",
-                        "description": "<p>设备序列号，与modularExt中的ple中必须要提供1个至少</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": true,
-                        "field": "installCode",
-                        "description": "<p>本次安装时生成的唯一码</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": true,
-                        "field": "usageCode",
-                        "description": "<p>本次启动时生成的唯一码</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": false,
-                        "field": "softwareName",
-                        "description": "<p>软件名称</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": false,
-                        "field": "softwareVer",
-                        "description": "<p>是在型号管理中约定的唯一名</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": false,
-                        "field": "tracingType",
-                        "description": "<p>采集类型</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "Bool",
-                        "optional": true,
-                        "field": "isOnline",
-                        "description": "<p>采集时是否联网,true/false</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": false,
-                        "field": "startOn",
-                        "description": "<p>采集开始时间</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": false,
-                        "field": "endOn",
-                        "description": "<p>采集结束时间</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "Object",
-                        "optional": false,
-                        "field": "osSoftExt",
-                        "description": "<p>系统扩展信息对象</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": false,
-                        "field": "osName",
-                        "description": "<p>系统名称</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": true,
-                        "field": "hostName",
-                        "description": "<p>主机名</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": true,
-                        "field": "osType",
-                        "description": "<p>操作系统类型</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": true,
-                        "field": "osVersion",
-                        "description": "<p>操作系统版本</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": true,
-                        "field": "lang",
-                        "description": "<p>系统语言，来自标准的https://www.science.co.il/language/Locale-codes.php，codePage值或是LCID String</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": false,
-                        "field": "resolution",
-                        "description": "<p>分辨率，以*分隔</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": true,
-                        "field": "installPath",
-                        "description": "<p>安装路径，指电脑本地路径</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "Object",
-                        "optional": true,
-                        "field": "browser",
-                        "description": "<p>默认浏览器信息对象</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": true,
-                        "field": "name",
-                        "description": "<p>默认浏览器名称</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": true,
-                        "field": "ver",
-                        "description": "<p>默认浏览器版本</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "Object",
-                        "optional": false,
-                        "field": "osHdExt",
-                        "description": "<p>硬件扩展信息对象</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "[]Object",
-                        "optional": false,
-                        "field": "cpu",
-                        "description": "<p>cpu对象</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "Integer",
-                        "optional": false,
-                        "field": "cpuCores",
-                        "description": "<p>cpu核数</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": false,
-                        "field": "cpuModel",
-                        "description": "<p>cpu型号</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": true,
-                        "field": "cpuVendor",
-                        "description": "<p>cpu品牌</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "[]Object",
-                        "optional": false,
-                        "field": "gpu",
-                        "description": "<p>gpu对象</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": false,
-                        "field": "gpuModel",
-                        "description": "<p>gpu型号</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "Integer",
-                        "optional": false,
-                        "field": "gpuMemSize",
-                        "description": "<p>gpu内存大小，单位是byte</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": true,
-                        "field": "gpuVendor",
-                        "description": "<p>gpu品牌</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "Integer",
-                        "optional": false,
-                        "field": "memSize",
-                        "description": "<p>内存大小，单位是byte</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "Integer",
-                        "optional": false,
-                        "field": "hddSize",
-                        "description": "<p>硬盘大小，单位是byte</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "Integer",
-                        "optional": false,
-                        "field": "hddRemainSize",
-                        "description": "<p>硬盘分区剩余大小，单位是byte</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "Object",
-                        "optional": true,
-                        "field": "modularExt",
-                        "description": "<p>配件或硬件扩展信息对象</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": true,
-                        "field": "ple",
-                        "description": "<p>加密串号</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "[]Object",
-                        "optional": true,
-                        "field": "modular",
-                        "description": "<p>模块对象</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": true,
-                        "field": "mple",
-                        "description": "<p>加密串号</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": true,
-                        "field": "sn",
-                        "description": "<p>序列号</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": true,
-                        "field": "validTo",
-                        "description": "<p>有效期截止时间</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "Bool",
-                        "optional": true,
-                        "field": "status",
-                        "description": "<p>状态，是启用还是禁用状态,true/false</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": false,
-                        "field": "content",
-                        "description": "<p>内容，一般是json的对象字符串</p>"
-                    }
-                ]
-            },
-            "examples": [
-                {
-                    "title": "Request-Example:",
-                    "content": "{\n    \"modelName\":\"afinia_3d_einscan_s\",\n    \"serialNum\":\"\",\n    \"installCode\":\"xxx\",\n    \"usageCode\":\"xxx\",\n    \"softwareName\":\"einscan\",\n    \"softwareVer\":\"2.7.0.5\",\n    \"tracingType\":\"form\",\n    \"isOnline\":true,\n    \"startOn\":\"2017-01-28T12:04:04Z\",\n    \"endOn\":\"2017-01-29T12:04:04Z\",\n    \"osSoftExt\":{\n        \"osName\":\"mac\",\n        \"hostName\":\"xxx\",\n        \"osType\":\"xxx\",\n        \"osVersion\":\"xxx\",\n        \"lang\":\"cn\",\n        \"resolution\":\"2478*1468\",\n        \"installPath\":\"afsdasd\",\n        \"browser\":{\n            \"name\":\"chrome\",\n            \"ver\":\"54.98\"\n        }\n    },\n    \"osHdExt\":{\n        \"cpu\":[{\n            \"cpuCores\":8,\n            \"cpuModel\":\"xeon\"\n        }],\n        \"memSize\":8096,\n        \"gpu\":[{\n            \"gpuModel\":\"intel hd4000\",\n            \"gpuMemSize\": 3900987777\n        }],\n        \"hddSize\":7866555,\n        \"hddRemainSize\":98792323232\n    },\n    \"modularExt\":{\n        \"ple\":\"588ea5a2b4fa8c29759e579d-V200.ple\",\n        \"modular\": [\n\t\t\t{\n\t\t\t\t\"name\":\"xxx\",\n\t\t\t\t\"sn\":\"xxx\",\n\t\t\t\t\"validTo\":\"xxx\",\n\t\t\t\t\"status\":false,\n\t\t\t\t\"mple\":\"xxx\"\n\t\t\t}\n        ]\n    },\n    \"content\":\"{}\"\n}",
-                    "type": "json"
-                }
-            ]
-        },
-        "success": {
-            "examples": [
-                {
-                    "title": "Success-Response",
-                    "content": " {\n\t\"result\":\"\",\n\t\"status\":\"success\"\n}",
-                    "type": "json"
-                }
-            ]
-        },
-        "error": {
-            "examples": [
-                {
-                    "title": "Error-Response",
-                    "content": " {\n\t\"result\":\"xxx\",\n\t\"status\":\"fail\"\n}",
-                    "type": "json"
-                }
-            ]
-        },
-        "version": "0.0.0",
-        "filename": "services/tracing.go",
-        "groupTitle": "push"
-    },
-    {
-        "type": "post",
-        "url": "/dtta?type=aliReport",
-        "title": "aliReport记录",
-        "description": "<p>urlName: tracing  用户端软件或硬件aliReport记录</p>",
-        "group": "tracing",
-        "name": "aliReportTracing",
-        "header": {
-            "fields": {
-                "Header": [
-                    {
-                        "group": "Header",
-                        "type": "String",
-                        "optional": false,
-                        "field": "X-Auth-AppId",
-                        "description": "<p>Required 您的应用获取到的appid</p>"
-                    }
-                ]
-            }
-        },
-        "parameter": {
-            "fields": {
-                "Parameter": [
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": true,
-                        "field": "modelName",
-                        "description": "<p>软硬件名称，是在型号管理中约定的唯一名</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": true,
-                        "field": "serialNum",
-                        "description": "<p>设备序列号，与modularExt中的ple中必须要提供1个至少</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": true,
-                        "field": "installCode",
-                        "description": "<p>本次安装时生成的唯一码</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": true,
-                        "field": "usageCode",
-                        "description": "<p>本次启动时生成的唯一码</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": false,
-                        "field": "softwareName",
-                        "description": "<p>软件名称</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": false,
-                        "field": "softwareVer",
-                        "description": "<p>是在型号管理中约定的唯一名</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": false,
-                        "field": "tracingType",
-                        "description": "<p>采集类型</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "Bool",
-                        "optional": true,
-                        "field": "isOnline",
-                        "description": "<p>采集时是否联网,true/false</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": false,
-                        "field": "startOn",
-                        "description": "<p>采集开始时间</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": false,
-                        "field": "endOn",
-                        "description": "<p>采集结束时间</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "Object",
-                        "optional": false,
-                        "field": "osSoftExt",
-                        "description": "<p>系统扩展信息对象</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": false,
-                        "field": "osName",
-                        "description": "<p>系统名称</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": true,
-                        "field": "hostName",
-                        "description": "<p>主机名</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": true,
-                        "field": "osType",
-                        "description": "<p>操作系统类型</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": true,
-                        "field": "osVersion",
-                        "description": "<p>操作系统版本</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": true,
-                        "field": "lang",
-                        "description": "<p>系统语言，来自标准的https://www.science.co.il/language/Locale-codes.php，codePage值或是LCID String</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": false,
-                        "field": "resolution",
-                        "description": "<p>分辨率，以*分隔</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": true,
-                        "field": "installPath",
-                        "description": "<p>安装路径，指电脑本地路径</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "Object",
-                        "optional": true,
-                        "field": "browser",
-                        "description": "<p>默认浏览器信息对象</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": true,
-                        "field": "name",
-                        "description": "<p>默认浏览器名称</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": true,
-                        "field": "ver",
-                        "description": "<p>默认浏览器版本</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "Object",
-                        "optional": false,
-                        "field": "osHdExt",
-                        "description": "<p>硬件扩展信息对象</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "[]Object",
-                        "optional": false,
-                        "field": "cpu",
-                        "description": "<p>cpu对象</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "Integer",
-                        "optional": false,
-                        "field": "cpuCores",
-                        "description": "<p>cpu核数</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": false,
-                        "field": "cpuModel",
-                        "description": "<p>cpu型号</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": true,
-                        "field": "cpuVendor",
-                        "description": "<p>cpu品牌</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "[]Object",
-                        "optional": false,
-                        "field": "gpu",
-                        "description": "<p>gpu对象</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": false,
-                        "field": "gpuModel",
-                        "description": "<p>gpu型号</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "Integer",
-                        "optional": false,
-                        "field": "gpuMemSize",
-                        "description": "<p>gpu内存大小，单位是byte</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": true,
-                        "field": "gpuVendor",
-                        "description": "<p>gpu品牌</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "Integer",
-                        "optional": false,
-                        "field": "memSize",
-                        "description": "<p>内存大小，单位是byte</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "Integer",
-                        "optional": false,
-                        "field": "hddSize",
-                        "description": "<p>硬盘大小，单位是byte</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "Integer",
-                        "optional": false,
-                        "field": "hddRemainSize",
-                        "description": "<p>硬盘分区剩余大小，单位是byte</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "Object",
-                        "optional": true,
-                        "field": "modularExt",
-                        "description": "<p>配件或硬件扩展信息对象</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": true,
-                        "field": "ple",
-                        "description": "<p>加密串号</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "[]Object",
-                        "optional": true,
-                        "field": "modular",
-                        "description": "<p>模块对象</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": true,
-                        "field": "mple",
-                        "description": "<p>加密串号</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": true,
-                        "field": "sn",
-                        "description": "<p>序列号</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": true,
-                        "field": "validTo",
-                        "description": "<p>有效期截止时间</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "Bool",
-                        "optional": true,
-                        "field": "status",
-                        "description": "<p>状态，是启用还是禁用状态,true/false</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": false,
-                        "field": "content",
-                        "description": "<p>内容，一般是数据文件上传后的内容</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": false,
-                        "field": "source",
-                        "description": "<p>来源</p>"
-                    }
-                ]
-            },
-            "examples": [
-                {
-                    "title": "Request-Example:",
-                    "content": "{\n    \"modelName\":\"afinia_3d_einscan_s\",\n    \"serialNum\":\"\",\n    \"installCode\":\"xxx\",\n    \"usageCode\":\"xxx\",\n    \"softwareName\":\"einscan\",\n    \"softwareVer\":\"2.7.0.5\",\n    \"tracingType\":\"aliReport\",\n    \"isOnline\":true,\n    \"startOn\":\"2017-01-28T12:04:04Z\",\n    \"endOn\":\"2017-01-29T12:04:04Z\",\n    \"osSoftExt\":{\n        \"osName\":\"mac\",\n        \"hostName\":\"xxx\",\n        \"osType\":\"xxx\",\n        \"osVersion\":\"xxx\",\n        \"lang\":\"cn\",\n        \"resolution\":\"2478*1468\",\n        \"installPath\":\"afsdasd\",\n        \"browser\":{\n            \"name\":\"chrome\",\n            \"ver\":\"54.98\"\n        }\n    },\n    \"osHdExt\":{\n        \"cpu\":[{\n            \"cpuCores\":8,\n            \"cpuModel\":\"xeon\"\n        }],\n        \"memSize\":8096,\n        \"gpu\":[{\n            \"gpuModel\":\"intel hd4000\",\n            \"gpuMemSize\": 3900987777\n        }],\n        \"hddSize\":7866555,\n        \"hddRemainSize\":98792323232\n    },\n    \"modularExt\":{\n        \"ple\":\"588ea5a2b4fa8c29759e579d-V200.ple\",\n        \"modular\": [\n\t\t\t{\n\t\t\t\t\"name\":\"xxx\",\n\t\t\t\t\"sn\":\"xxx\",\n\t\t\t\t\"validTo\":\"xxx\",\n\t\t\t\t\"status\":false,\n\t\t\t\t\"mple\":\"xxx\"\n\t\t\t}\n        ]\n    },\n    \"content\": \"xxx\"\n}",
-                    "type": "json"
-                }
-            ]
-        },
-        "success": {
-            "examples": [
-                {
-                    "title": "Success-Response",
-                    "content": " {\n\t\"result\":\"\",\n\t\"status\":\"success\"\n}",
-                    "type": "json"
-                }
-            ]
-        },
-        "error": {
-            "examples": [
-                {
-                    "title": "Error-Response",
-                    "content": " {\n\t\"result\":\"xxx\",\n\t\"status\":\"fail\"\n}",
-                    "type": "json"
-                }
-            ]
-        },
-        "version": "0.0.0",
-        "filename": "services/tracing.go",
-        "groupTitle": "tracing"
-    },
-    {
-        "type": "post",
-        "url": "/dtta?type=aliUpgrade",
-        "title": "阿里鞋测量升级记录跟踪",
-        "description": "<p>urlName: aliUpgrade  阿里鞋测量升级记录跟踪</p>",
-        "group": "tracing",
-        "name": "aliUpgradeTracing",
-        "header": {
-            "fields": {
-                "Header": [
-                    {
-                        "group": "Header",
-                        "type": "String",
-                        "optional": false,
-                        "field": "X-Auth-AppId",
-                        "description": "<p>Required 您的应用获取到的appid</p>"
-                    }
-                ]
-            }
-        },
-        "parameter": {
-            "fields": {
-                "Parameter": [
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": true,
-                        "field": "modelName",
-                        "description": "<p>软硬件名称，是在型号管理中约定的唯一名</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": true,
-                        "field": "serialNum",
-                        "description": "<p>设备序列号</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": true,
-                        "field": "installCode",
-                        "description": "<p>本次安装时生成的唯一码</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": true,
-                        "field": "usageCode",
-                        "description": "<p>本次启动时生成的唯一码</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": false,
-                        "field": "softwareName",
-                        "description": "<p>软件名称</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": false,
-                        "field": "softwareVer",
-                        "description": "<p>是在型号管理中约定的唯一名</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": false,
-                        "field": "tracingType",
-                        "description": "<p>采集类型</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "Bool",
-                        "optional": true,
-                        "field": "isOnline",
-                        "description": "<p>采集时是否联网,true/false</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": false,
-                        "field": "startOn",
-                        "description": "<p>采集开始时间</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "Object",
-                        "optional": false,
-                        "field": "osSoftExt",
-                        "description": "<p>系统扩展信息对象</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": false,
-                        "field": "osName",
-                        "description": "<p>系统名称</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": true,
-                        "field": "hostName",
-                        "description": "<p>主机名</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": true,
-                        "field": "osType",
-                        "description": "<p>操作系统类型</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": true,
-                        "field": "osVersion",
-                        "description": "<p>操作系统版本</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": true,
-                        "field": "lang",
-                        "description": "<p>系统语言，来自标准的https://www.science.co.il/language/Locale-codes.php，codePage值或是LCID String</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": false,
-                        "field": "resolution",
-                        "description": "<p>分辨率，以*分隔</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": true,
-                        "field": "installPath",
-                        "description": "<p>安装路径，指电脑本地路径</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "Object",
-                        "optional": true,
-                        "field": "browser",
-                        "description": "<p>默认浏览器信息对象</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": true,
-                        "field": "name",
-                        "description": "<p>默认浏览器名称</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": true,
-                        "field": "ver",
-                        "description": "<p>默认浏览器版本</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "Object",
-                        "optional": false,
-                        "field": "osHdExt",
-                        "description": "<p>硬件扩展信息对象</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "[]Object",
-                        "optional": false,
-                        "field": "cpu",
-                        "description": "<p>cpu对象</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "Integer",
-                        "optional": false,
-                        "field": "cpuCores",
-                        "description": "<p>cpu核数</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": false,
-                        "field": "cpuModel",
-                        "description": "<p>cpu型号</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": true,
-                        "field": "cpuVendor",
-                        "description": "<p>cpu品牌</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "[]Object",
-                        "optional": false,
-                        "field": "gpu",
-                        "description": "<p>gpu对象</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": false,
-                        "field": "gpuModel",
-                        "description": "<p>gpu型号</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "Integer",
-                        "optional": false,
-                        "field": "gpuMemSize",
-                        "description": "<p>gpu内存大小，单位是byte</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": true,
-                        "field": "gpuVendor",
-                        "description": "<p>gpu品牌</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "Integer",
-                        "optional": false,
-                        "field": "memSize",
-                        "description": "<p>内存大小，单位是byte</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "Integer",
-                        "optional": false,
-                        "field": "hddSize",
-                        "description": "<p>硬盘大小，单位是byte</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "Integer",
-                        "optional": false,
-                        "field": "hddRemainSize",
-                        "description": "<p>硬盘分区剩余大小，单位是byte</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "Object",
-                        "optional": true,
-                        "field": "modularExt",
-                        "description": "<p>配件或硬件扩展信息对象</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": true,
-                        "field": "ple",
-                        "description": "<p>加密串号</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "[]Object",
-                        "optional": true,
-                        "field": "modular",
-                        "description": "<p>模块对象</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": true,
-                        "field": "mple",
-                        "description": "<p>加密串号</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": true,
-                        "field": "sn",
-                        "description": "<p>序列号</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": true,
-                        "field": "validTo",
-                        "description": "<p>有效期截止时间</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "Bool",
-                        "optional": true,
-                        "field": "status",
-                        "description": "<p>状态，是启用还是禁用状态,true/false</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "Object",
-                        "optional": false,
-                        "field": "content",
-                        "description": "<p>采集内容</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": true,
-                        "field": "deviceId",
-                        "description": "<p>硬盘id</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": true,
-                        "field": "algorighmVer",
-                        "description": "<p>算法版本</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": true,
-                        "field": "sdkVer",
-                        "description": "<p>软件sdk版本</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": true,
-                        "field": "communityVer",
-                        "description": "<p>通讯sdk版本</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": true,
-                        "field": "firmwareVer",
-                        "description": "<p>硬件固件版本</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": true,
-                        "field": "frontVer",
-                        "description": "<p>前端版本</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": true,
-                        "field": "ssid",
-                        "description": "<p>ssid</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": true,
-                        "field": "ssidPwd",
-                        "description": "<p>ssidPwd</p>"
-                    }
-                ]
-            },
-            "examples": [
-                {
-                    "title": "Request-Example:",
-                    "content": "{\n    \"modelName\":\"afinia_3d_einscan_s\",\n    \"serialNum\":\"\",\n    \"installCode\":\"xxx\",\n    \"usageCode\":\"xxx\",\n    \"softwareName\":\"einscan\",\n    \"softwareVer\":\"2.7.0.5\",\n    \"tracingType\":\"aliUpgrade\",\n    \"isOnline\":true,\n    \"startOn\":\"2017-01-28T12:04:04Z\",\n    \"osSoftExt\":{\n        \"osName\":\"mac\",\n        \"hostName\":\"xxx\",\n        \"osType\":\"xxx\",\n        \"osVersion\":\"xxx\",\n        \"lang\":\"cn\",\n        \"resolution\":\"2478*1468\",\n        \"installPath\":\"afsdasd\",\n        \"browser\":{\n            \"name\":\"chrome\",\n            \"ver\":\"54.98\"\n        }\n    },\n    \"osHdExt\":{\n        \"cpu\":[{\n            \"cpuCores\":8,\n            \"cpuModel\":\"xeon\"\n        }],\n        \"memSize\":8096,\n        \"gpu\":[{\n            \"gpuModel\":\"intel hd4000\",\n            \"gpuMemSize\": 3900987777\n        }],\n        \"hddSize\":7866555,\n        \"hddRemainSize\":98792323232\n    },\n    \"modularExt\":{\n        \"ple\":\"588ea5a2b4fa8c29759e579d-V200.ple\",\n        \"modular\": [\n\t\t\t{\n\t\t\t\t\"name\":\"xxx\",\n\t\t\t\t\"sn\":\"xxx\",\n\t\t\t\t\"validTo\":\"xxx\",\n\t\t\t\t\"status\":false,\n\t\t\t\t\"mple\":\"xxx\"\n\t\t\t}\n        ]\n    },\n    \"content\":{\n        \"deviceId\":\"\",\n        \"algorighmVer\":\"\",\n        \"sdkVer\":\"\",\n        \"communityVer\":\"\",\n        \"firmwareVer\":\"\",\n        \"ssid\":\"\",\n        \"ssidPwd\":\"\",\n        \"frontVer\":\"\"\n    }\n}",
-                    "type": "json"
-                }
-            ]
-        },
-        "success": {
-            "examples": [
-                {
-                    "title": "Success-Response",
-                    "content": " {\n\t\"result\":\"\",\n\t\"status\":\"success\"\n}",
-                    "type": "json"
-                }
-            ]
-        },
-        "error": {
-            "examples": [
-                {
-                    "title": "Error-Response",
-                    "content": " {\n\t\"result\":\"xxx\",\n\t\"status\":\"fail\"\n}",
-                    "type": "json"
-                }
-            ]
-        },
-        "version": "0.0.0",
-        "filename": "services/tracing.go",
-        "groupTitle": "tracing"
-    },
-    {
-        "type": "post",
-        "url": "/dtta?type=data",
-        "title": "数据记录",
-        "description": "<p>urlName: tracing  用户端软件或硬件数据记录</p>",
-        "group": "tracing",
-        "name": "dataTracing",
-        "header": {
-            "fields": {
-                "Header": [
-                    {
-                        "group": "Header",
-                        "type": "String",
-                        "optional": false,
-                        "field": "X-Auth-AppId",
-                        "description": "<p>Required 您的应用获取到的appid</p>"
-                    }
-                ]
-            }
-        },
-        "parameter": {
-            "fields": {
-                "Parameter": [
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": true,
-                        "field": "modelName",
-                        "description": "<p>软硬件名称，是在型号管理中约定的唯一名</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": true,
-                        "field": "serialNum",
-                        "description": "<p>设备序列号，与modularExt中的ple中必须要提供1个至少</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": true,
-                        "field": "installCode",
-                        "description": "<p>本次安装时生成的唯一码</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": true,
-                        "field": "usageCode",
-                        "description": "<p>本次启动时生成的唯一码</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": false,
-                        "field": "softwareName",
-                        "description": "<p>软件名称</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": false,
-                        "field": "softwareVer",
-                        "description": "<p>是在型号管理中约定的唯一名</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": false,
-                        "field": "tracingType",
-                        "description": "<p>采集类型</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "Bool",
-                        "optional": true,
-                        "field": "isOnline",
-                        "description": "<p>采集时是否联网,true/false</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": false,
-                        "field": "startOn",
-                        "description": "<p>采集开始时间</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": false,
-                        "field": "endOn",
-                        "description": "<p>采集结束时间</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "Object",
-                        "optional": false,
-                        "field": "osSoftExt",
-                        "description": "<p>系统扩展信息对象</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": false,
-                        "field": "osName",
-                        "description": "<p>系统名称</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": true,
-                        "field": "hostName",
-                        "description": "<p>主机名</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": true,
-                        "field": "osType",
-                        "description": "<p>操作系统类型</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": true,
-                        "field": "osVersion",
-                        "description": "<p>操作系统版本</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": true,
-                        "field": "lang",
-                        "description": "<p>系统语言，来自标准的https://www.science.co.il/language/Locale-codes.php，codePage值或是LCID String</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": false,
-                        "field": "resolution",
-                        "description": "<p>分辨率，以*分隔</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": true,
-                        "field": "installPath",
-                        "description": "<p>安装路径，指电脑本地路径</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "Object",
-                        "optional": true,
-                        "field": "browser",
-                        "description": "<p>默认浏览器信息对象</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": true,
-                        "field": "name",
-                        "description": "<p>默认浏览器名称</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": true,
-                        "field": "ver",
-                        "description": "<p>默认浏览器版本</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "Object",
-                        "optional": false,
-                        "field": "osHdExt",
-                        "description": "<p>硬件扩展信息对象</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "[]Object",
-                        "optional": false,
-                        "field": "cpu",
-                        "description": "<p>cpu对象</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "Integer",
-                        "optional": false,
-                        "field": "cpuCores",
-                        "description": "<p>cpu核数</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": false,
-                        "field": "cpuModel",
-                        "description": "<p>cpu型号</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": true,
-                        "field": "cpuVendor",
-                        "description": "<p>cpu品牌</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "[]Object",
-                        "optional": false,
-                        "field": "gpu",
-                        "description": "<p>gpu对象</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": false,
-                        "field": "gpuModel",
-                        "description": "<p>gpu型号</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "Integer",
-                        "optional": false,
-                        "field": "gpuMemSize",
-                        "description": "<p>gpu内存大小，单位是byte</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": true,
-                        "field": "gpuVendor",
-                        "description": "<p>gpu品牌</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "Integer",
-                        "optional": false,
-                        "field": "memSize",
-                        "description": "<p>内存大小，单位是byte</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "Integer",
-                        "optional": false,
-                        "field": "hddSize",
-                        "description": "<p>硬盘大小，单位是byte</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "Integer",
-                        "optional": false,
-                        "field": "hddRemainSize",
-                        "description": "<p>硬盘分区剩余大小，单位是byte</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "Object",
-                        "optional": true,
-                        "field": "modularExt",
-                        "description": "<p>配件或硬件扩展信息对象</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": true,
-                        "field": "ple",
-                        "description": "<p>加密串号</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "[]Object",
-                        "optional": true,
-                        "field": "modular",
-                        "description": "<p>模块对象</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": true,
-                        "field": "mple",
-                        "description": "<p>加密串号</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": true,
-                        "field": "sn",
-                        "description": "<p>序列号</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": true,
-                        "field": "validTo",
-                        "description": "<p>有效期截止时间</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "Bool",
-                        "optional": true,
-                        "field": "status",
-                        "description": "<p>状态，是启用还是禁用状态,true/false</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": false,
-                        "field": "content",
-                        "description": "<p>内容，一般是数据文件上传后的内容</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": false,
-                        "field": "files",
-                        "description": "<p>文件，一般是数据文件上传后的dfsId，以逗号分隔</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": false,
-                        "field": "others",
-                        "description": "<p>其它，一般是数据相关的一些信息</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": false,
-                        "field": "source",
-                        "description": "<p>来源</p>"
-                    }
-                ]
-            },
-            "examples": [
-                {
-                    "title": "Request-Example:",
-                    "content": "{\n    \"modelName\":\"afinia_3d_einscan_s\",\n    \"serialNum\":\"\",\n    \"installCode\":\"xxx\",\n    \"usageCode\":\"xxx\",\n    \"softwareName\":\"einscan\",\n    \"softwareVer\":\"2.7.0.5\",\n    \"tracingType\":\"data\",\n    \"isOnline\":true,\n    \"startOn\":\"2017-01-28T12:04:04Z\",\n    \"endOn\":\"2017-01-29T12:04:04Z\",\n    \"osSoftExt\":{\n        \"osName\":\"mac\",\n        \"hostName\":\"xxx\",\n        \"osType\":\"xxx\",\n        \"osVersion\":\"xxx\",\n        \"lang\":\"cn\",\n        \"resolution\":\"2478*1468\",\n        \"installPath\":\"afsdasd\",\n        \"browser\":{\n            \"name\":\"chrome\",\n            \"ver\":\"54.98\"\n        }\n    },\n    \"osHdExt\":{\n        \"cpu\":[{\n            \"cpuCores\":8,\n            \"cpuModel\":\"xeon\"\n        }],\n        \"memSize\":8096,\n        \"gpu\":[{\n            \"gpuModel\":\"intel hd4000\",\n            \"gpuMemSize\": 3900987777\n        }],\n        \"hddSize\":7866555,\n        \"hddRemainSize\":98792323232\n    },\n    \"modularExt\":{\n        \"ple\":\"588ea5a2b4fa8c29759e579d-V200.ple\",\n        \"modular\": [\n\t\t\t{\n\t\t\t\t\"name\":\"xxx\",\n\t\t\t\t\"sn\":\"xxx\",\n\t\t\t\t\"validTo\":\"xxx\",\n\t\t\t\t\"status\":false,\n\t\t\t\t\"mple\":\"xxx\"\n\t\t\t}\n        ]\n    },\n    \"content\": {\n\t\t\"files\":\"xxx\",\n\t\t\"source\":\"xxx\",\n\t\t\"others\":\"xxx\"\n\t}\n}",
-                    "type": "json"
-                }
-            ]
-        },
-        "success": {
-            "examples": [
-                {
-                    "title": "Success-Response",
-                    "content": " {\n\t\"result\":\"\",\n\t\"status\":\"success\"\n}",
-                    "type": "json"
-                }
-            ]
-        },
-        "error": {
-            "examples": [
-                {
-                    "title": "Error-Response",
-                    "content": " {\n\t\"result\":\"xxx\",\n\t\"status\":\"fail\"\n}",
-                    "type": "json"
-                }
-            ]
-        },
-        "version": "0.0.0",
-        "filename": "services/tracing.go",
-        "groupTitle": "tracing"
-    },
-    {
-        "type": "post",
-        "url": "/dtta?type=dot",
-        "title": "软硬件功能点使用跟踪",
-        "description": "<p>urlName: tracing  软硬件设置变动记录</p>",
-        "group": "tracing",
-        "name": "dotTracing",
-        "header": {
-            "fields": {
-                "Header": [
-                    {
-                        "group": "Header",
-                        "type": "String",
-                        "optional": false,
-                        "field": "X-Auth-AppId",
-                        "description": "<p>Required 您的应用获取到的appid</p>"
-                    }
-                ]
-            }
-        },
-        "parameter": {
-            "fields": {
-                "Parameter": [
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": true,
-                        "field": "modelName",
-                        "description": "<p>软硬件名称，是在型号管理中约定的唯一名</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": true,
-                        "field": "serialNum",
-                        "description": "<p>设备序列号</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": true,
-                        "field": "installCode",
-                        "description": "<p>本次安装时生成的唯一码</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": true,
-                        "field": "usageCode",
-                        "description": "<p>本次启动时生成的唯一码</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": false,
-                        "field": "softwareName",
-                        "description": "<p>软件名称</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": false,
-                        "field": "softwareVer",
-                        "description": "<p>是在型号管理中约定的唯一名</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": false,
-                        "field": "tracingType",
-                        "description": "<p>采集类型</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "Bool",
-                        "optional": true,
-                        "field": "isOnline",
-                        "description": "<p>采集时是否联网,true/false</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": false,
-                        "field": "startOn",
-                        "description": "<p>采集开始时间</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": false,
-                        "field": "endOn",
-                        "description": "<p>采集结束时间</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "Object",
-                        "optional": false,
-                        "field": "osSoftExt",
-                        "description": "<p>系统扩展信息对象</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": false,
-                        "field": "osName",
-                        "description": "<p>系统名称</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": true,
-                        "field": "hostName",
-                        "description": "<p>主机名</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": true,
-                        "field": "osType",
-                        "description": "<p>操作系统类型</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": true,
-                        "field": "osVersion",
-                        "description": "<p>操作系统版本</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": true,
-                        "field": "lang",
-                        "description": "<p>系统语言，来自标准的https://www.science.co.il/language/Locale-codes.php，codePage值或是LCID String</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": false,
-                        "field": "resolution",
-                        "description": "<p>分辨率，以*分隔</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": true,
-                        "field": "installPath",
-                        "description": "<p>安装路径，指电脑本地路径</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "Object",
-                        "optional": true,
-                        "field": "browser",
-                        "description": "<p>默认浏览器信息对象</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": true,
-                        "field": "name",
-                        "description": "<p>默认浏览器名称</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": true,
-                        "field": "ver",
-                        "description": "<p>默认浏览器版本</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "Object",
-                        "optional": false,
-                        "field": "osHdExt",
-                        "description": "<p>硬件扩展信息对象</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "[]Object",
-                        "optional": false,
-                        "field": "cpu",
-                        "description": "<p>cpu对象</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "Integer",
-                        "optional": false,
-                        "field": "cpuCores",
-                        "description": "<p>cpu核数</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": false,
-                        "field": "cpuModel",
-                        "description": "<p>cpu型号</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": true,
-                        "field": "cpuVendor",
-                        "description": "<p>cpu品牌</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "[]Object",
-                        "optional": false,
-                        "field": "gpu",
-                        "description": "<p>gpu对象</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": false,
-                        "field": "gpuModel",
-                        "description": "<p>gpu型号</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "Integer",
-                        "optional": false,
-                        "field": "gpuMemSize",
-                        "description": "<p>gpu内存大小，单位是byte</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": true,
-                        "field": "gpuVendor",
-                        "description": "<p>gpu品牌</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "Integer",
-                        "optional": false,
-                        "field": "memSize",
-                        "description": "<p>内存大小，单位是byte</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "Integer",
-                        "optional": false,
-                        "field": "hddSize",
-                        "description": "<p>硬盘大小，单位是byte</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "Integer",
-                        "optional": false,
-                        "field": "hddRemainSize",
-                        "description": "<p>硬盘分区剩余大小，单位是byte</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "Object",
-                        "optional": true,
-                        "field": "modularExt",
-                        "description": "<p>配件或硬件扩展信息对象</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": true,
-                        "field": "ple",
-                        "description": "<p>加密串号</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "[]Object",
-                        "optional": true,
-                        "field": "modular",
-                        "description": "<p>模块对象</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": true,
-                        "field": "mple",
-                        "description": "<p>加密串号</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": true,
-                        "field": "sn",
-                        "description": "<p>序列号</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": true,
-                        "field": "validTo",
-                        "description": "<p>有效期截止时间</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "Bool",
-                        "optional": true,
-                        "field": "status",
-                        "description": "<p>状态，是启用还是禁用状态,true/false</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "Object",
-                        "optional": false,
-                        "field": "content",
-                        "description": "<p>采集内容</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": false,
-                        "field": "dotName",
-                        "description": "<p>功能点</p>"
-                    },
                     {
                         "group": "Parameter",
                         "type": "String",
                         "optional": false,
                         "field": "modelCode",
-                        "description": "<p>软硬件名称，是在型号管理中约定的唯一名</p>"
-                    }
-                ]
-            },
-            "examples": [
-                {
-                    "title": "Request-Example:",
-                    "content": "{\n    \"modelName\":\"afinia_3d_einscan_s\",\n    \"serialNum\":\"\",\n    \"installCode\":\"xxx\",\n    \"usageCode\":\"xxx\",\n    \"softwareName\":\"einscan\",\n    \"softwareVer\":\"2.7.0.5\",\n    \"tracingType\":\"dot\",\n    \"isOnline\":true,\n    \"startOn\":\"2017-01-28T12:04:04Z\",\n    \"endOn\":\"2017-01-29T12:04:04Z\",\n    \"osSoftExt\":{\n        \"osName\":\"mac\",\n        \"hostName\":\"xxx\",\n        \"osType\":\"xxx\",\n        \"osVersion\":\"xxx\",\n        \"lang\":\"cn\",\n        \"resolution\":\"2478*1468\",\n        \"installPath\":\"afsdasd\",\n        \"browser\":{\n            \"name\":\"chrome\",\n            \"ver\":\"54.98\"\n        }\n    },\n    \"osHdExt\":{\n        \"cpu\":[{\n            \"cpuCores\":8,\n            \"cpuModel\":\"xeon\"\n        }],\n        \"memSize\":8096,\n        \"gpu\":[{\n            \"gpuModel\":\"intel hd4000\",\n            \"gpuMemSize\": 3900987777\n        }],\n        \"hddSize\":7866555,\n        \"hddRemainSize\":98792323232\n    },\n    \"modularExt\":{\n        \"ple\":\"588ea5a2b4fa8c29759e579d-V200.ple\",\n        \"modular\": [\n\t\t\t{\n\t\t\t\t\"name\":\"xxx\",\n\t\t\t\t\"sn\":\"xxx\",\n\t\t\t\t\"validTo\":\"xxx\",\n\t\t\t\t\"status\":false,\n\t\t\t\t\"mple\":\"xxx\"\n\t\t\t}\n        ]\n    },\n    \"content\":{\n        \"dotName\":\"xxx\",\n        \"modelCode\":\"XXX\",\n        \"sn\":\"XXX\"\n    }\n}",
-                    "type": "json"
-                }
-            ]
-        },
-        "success": {
-            "examples": [
-                {
-                    "title": "Success-Response",
-                    "content": " {\n\t\"result\":\"\",\n\t\"status\":\"success\"\n}",
-                    "type": "json"
-                }
-            ]
-        },
-        "error": {
-            "examples": [
-                {
-                    "title": "Error-Response",
-                    "content": " {\n\t\"result\":\"xxx\",\n\t\"status\":\"fail\"\n}",
-                    "type": "json"
-                }
-            ]
-        },
-        "version": "0.0.0",
-        "filename": "services/tracing.go",
-        "groupTitle": "tracing"
-    },
-    {
-        "type": "post",
-        "url": "/dtta?type=install",
-        "title": "软硬件安装记录跟踪",
-        "description": "<p>urlName: tracing  软硬件安装记录</p>",
-        "group": "tracing",
-        "name": "installTracing",
-        "header": {
-            "fields": {
-                "Header": [
-                    {
-                        "group": "Header",
-                        "type": "String",
-                        "optional": false,
-                        "field": "X-Auth-AppId",
-                        "description": "<p>Required 您的应用获取到的appid</p>"
-                    }
-                ]
-            }
-        },
-        "parameter": {
-            "fields": {
-                "Parameter": [
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": true,
-                        "field": "modelName",
-                        "description": "<p>软硬件名称，是在型号管理中约定的唯一名</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": true,
-                        "field": "serialNum",
-                        "description": "<p>设备序列号</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": true,
-                        "field": "installCode",
-                        "description": "<p>本次安装时生成的唯一码</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": true,
-                        "field": "usageCode",
-                        "description": "<p>本次启动时生成的唯一码</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": false,
-                        "field": "softwareName",
-                        "description": "<p>软件名称</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": false,
-                        "field": "softwareVer",
-                        "description": "<p>是在型号管理中约定的唯一名</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": false,
-                        "field": "tracingType",
-                        "description": "<p>采集类型</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "Bool",
-                        "optional": true,
-                        "field": "isOnline",
-                        "description": "<p>采集时是否联网,true/false</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": false,
-                        "field": "startOn",
-                        "description": "<p>采集开始时间</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": false,
-                        "field": "endOn",
-                        "description": "<p>采集结束时间</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "Object",
-                        "optional": false,
-                        "field": "osSoftExt",
-                        "description": "<p>系统扩展信息对象</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": false,
-                        "field": "osName",
-                        "description": "<p>系统名称</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": true,
-                        "field": "hostName",
-                        "description": "<p>主机名</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": true,
-                        "field": "osType",
-                        "description": "<p>操作系统类型</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": true,
-                        "field": "osVersion",
-                        "description": "<p>操作系统版本</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": true,
-                        "field": "lang",
-                        "description": "<p>系统语言，来自标准的https://www.science.co.il/language/Locale-codes.php，codePage值或是LCID String</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": false,
-                        "field": "resolution",
-                        "description": "<p>分辨率，以*分隔</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": true,
-                        "field": "installPath",
-                        "description": "<p>安装路径，指电脑本地路径</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "Object",
-                        "optional": true,
-                        "field": "browser",
-                        "description": "<p>默认浏览器信息对象</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": true,
-                        "field": "name",
-                        "description": "<p>默认浏览器名称</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": true,
-                        "field": "ver",
-                        "description": "<p>默认浏览器版本</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "Object",
-                        "optional": false,
-                        "field": "osHdExt",
-                        "description": "<p>硬件扩展信息对象</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "[]Object",
-                        "optional": false,
-                        "field": "cpu",
-                        "description": "<p>cpu对象</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "Integer",
-                        "optional": false,
-                        "field": "cpuCores",
-                        "description": "<p>cpu核数</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": false,
-                        "field": "cpuModel",
-                        "description": "<p>cpu型号</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": true,
-                        "field": "cpuVendor",
-                        "description": "<p>cpu品牌</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "[]Object",
-                        "optional": false,
-                        "field": "gpu",
-                        "description": "<p>gpu对象</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": false,
-                        "field": "gpuModel",
-                        "description": "<p>gpu型号</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "Integer",
-                        "optional": false,
-                        "field": "gpuMemSize",
-                        "description": "<p>gpu内存大小，单位是byte</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": true,
-                        "field": "gpuVendor",
-                        "description": "<p>gpu品牌</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "Integer",
-                        "optional": false,
-                        "field": "memSize",
-                        "description": "<p>内存大小，单位是byte</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "Integer",
-                        "optional": false,
-                        "field": "hddSize",
-                        "description": "<p>硬盘大小，单位是byte</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "Integer",
-                        "optional": false,
-                        "field": "hddRemainSize",
-                        "description": "<p>硬盘分区剩余大小，单位是byte</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "Object",
-                        "optional": true,
-                        "field": "modularExt",
-                        "description": "<p>配件或硬件扩展信息对象</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": true,
-                        "field": "ple",
-                        "description": "<p>加密串号</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "[]Object",
-                        "optional": true,
-                        "field": "modular",
-                        "description": "<p>模块对象</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": true,
-                        "field": "mple",
-                        "description": "<p>加密串号</p>"
+                        "description": "<p>约定的唯一型号名，比如solidEdge，一般是集成软件的约定名称或是产品线指定的设备唯一型号名</p>"
                     },
                     {
                         "group": "Parameter",
                         "type": "String",
                         "optional": true,
                         "field": "sn",
-                        "description": "<p>序列号</p>"
+                        "description": "<p>Optional SolidEdge的激活码或是设备序列号</p>"
                     },
                     {
                         "group": "Parameter",
                         "type": "String",
-                        "optional": true,
-                        "field": "validTo",
-                        "description": "<p>有效期截止时间</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "Bool",
-                        "optional": true,
-                        "field": "status",
-                        "description": "<p>状态，是启用还是禁用状态,true/false</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "Object",
                         "optional": false,
-                        "field": "content",
-                        "description": "<p>采集内容</p>"
+                        "field": "fingerprint",
+                        "description": "<p>SolidEdge运行电脑或是设备的指纹</p>"
                     },
                     {
                         "group": "Parameter",
                         "type": "String",
                         "optional": true,
+                        "field": "data",
+                        "description": "<p>Optional 调用库生成的解密内容</p>"
+                    }
+                ]
+            },
+            "examples": [
+                {
+                    "title": "Request-Example:",
+                    "content": "{\n\t\"modelCode\": \"xxxx\",\n\t\"sn\": \"xxxx\",\n\t\"fingerprint\":\"xxx\",\n\t\"data\":\"xxx\"\n}",
+                    "type": "json"
+                }
+            ]
+        },
+        "success": {
+            "fields": {
+                "Success 200": [
+                    {
+                        "group": "Success 200",
+                        "type": "Int",
+                        "optional": false,
+                        "field": "concurrent",
+                        "description": "<p>允许的并发运行数量</p>"
+                    },
+                    {
+                        "group": "Success 200",
+                        "type": "String",
+                        "optional": false,
+                        "field": "createAt",
+                        "description": "<p>第1次授权开始时间</p>"
+                    },
+                    {
+                        "group": "Success 200",
+                        "type": "String",
+                        "optional": false,
+                        "field": "validUntil",
+                        "description": "<p>授权有效时间</p>"
+                    },
+                    {
+                        "group": "Success 200",
+                        "type": "Float",
+                        "optional": false,
+                        "field": "surplusDays",
+                        "description": "<p>剩余有效天数</p>"
+                    },
+                    {
+                        "group": "Success 200",
+                        "type": "Int",
+                        "optional": false,
+                        "field": "upgradeCount",
+                        "description": "<p>已经激活的次数</p>"
+                    },
+                    {
+                        "group": "Success 200",
+                        "type": "String",
+                        "optional": false,
+                        "field": "data",
+                        "description": "<p>调用库生成的解密内容</p>"
+                    },
+                    {
+                        "group": "Success 200",
+                        "type": "String",
+                        "optional": false,
+                        "field": "modelCode",
+                        "description": "<p>约定的唯一型号名，比如solidEdge，一般是集成软件的约定名称或是产品线指定的设备唯一型号名</p>"
+                    },
+                    {
+                        "group": "Success 200",
+                        "type": "String",
+                        "optional": true,
+                        "field": "deviceModelCode",
+                        "description": "<p>约定的设备唯一型号名，比如einscan</p>"
+                    },
+                    {
+                        "group": "Success 200",
+                        "type": "String",
+                        "optional": true,
+                        "field": "deviceSN",
+                        "description": "<p>设备序列号</p>"
+                    },
+                    {
+                        "group": "Success 200",
+                        "type": "String",
+                        "optional": true,
+                        "field": "version",
+                        "description": "<p>版本信息</p>"
+                    },
+                    {
+                        "group": "Success 200",
+                        "type": "String",
+                        "optional": false,
+                        "field": "sn",
+                        "description": "<p>SolidEdge的激活码，如果不是solidEdge则是设备的序列号</p>"
+                    },
+                    {
+                        "group": "Success 200",
+                        "type": "String",
+                        "optional": false,
+                        "field": "fingerprint",
+                        "description": "<p>SolidEdge运行电脑或是设备的指纹</p>"
+                    },
+                    {
+                        "group": "Success 200",
+                        "type": "String",
+                        "optional": false,
+                        "field": "name",
+                        "description": "<p>姓名</p>"
+                    },
+                    {
+                        "group": "Success 200",
+                        "type": "String",
+                        "optional": false,
+                        "field": "company",
+                        "description": "<p>公司</p>"
+                    },
+                    {
+                        "group": "Success 200",
+                        "type": "String",
+                        "optional": false,
+                        "field": "telephone",
+                        "description": "<p>电话</p>"
+                    },
+                    {
+                        "group": "Success 200",
+                        "type": "String",
+                        "optional": false,
                         "field": "email",
                         "description": "<p>邮箱</p>"
                     },
                     {
-                        "group": "Parameter",
+                        "group": "Success 200",
                         "type": "String",
-                        "optional": true,
+                        "optional": false,
+                        "field": "country",
+                        "description": "<p>国家</p>"
+                    },
+                    {
+                        "group": "Success 200",
+                        "type": "String",
+                        "optional": false,
+                        "field": "addr",
+                        "description": "<p>地址</p>"
+                    },
+                    {
+                        "group": "Success 200",
+                        "type": "String",
+                        "optional": false,
                         "field": "industry",
                         "description": "<p>行业</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": true,
-                        "field": "phone",
-                        "description": "<p>手机</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": true,
-                        "field": "title",
-                        "description": "<p>称呼</p>"
                     }
                 ]
             },
             "examples": [
                 {
-                    "title": "Request-Example:",
-                    "content": "{\n    \"modelName\":\"afinia_3d_einscan_s\",\n    \"serialNum\":\"\",\n    \"installCode\":\"xxx\",\n    \"usageCode\":\"xxx\",\n    \"softwareName\":\"einscan\",\n    \"softwareVer\":\"2.7.0.5\",\n    \"tracingType\":\"install\",\n    \"isOnline\":true,\n    \"startOn\":\"2017-01-28T12:04:04Z\",\n    \"endOn\":\"2017-01-29T12:04:04Z\",\n    \"osSoftExt\":{\n        \"osName\":\"mac\",\n        \"hostName\":\"xxx\",\n        \"osType\":\"xxx\",\n        \"osVersion\":\"xxx\",\n        \"lang\":\"cn\",\n        \"resolution\":\"2478*1468\",\n        \"installPath\":\"afsdasd\",\n        \"browser\":{\n            \"name\":\"chrome\",\n            \"ver\":\"54.98\"\n        }\n    },\n    \"osHdExt\":{\n        \"cpu\":[{\n            \"cpuCores\":8,\n            \"cpuModel\":\"xeon\"\n        }],\n        \"memSize\":8096,\n        \"gpu\":[{\n            \"gpuModel\":\"intel hd4000\",\n            \"gpuMemSize\": 3900987777\n        }],\n        \"hddSize\":7866555,\n        \"hddRemainSize\":98792323232\n    },\n    \"modularExt\":{\n        \"ple\":\"588ea5a2b4fa8c29759e579d-V200.ple\",\n        \"modular\": [\n\t\t\t{\n\t\t\t\t\"name\":\"xxx\",\n\t\t\t\t\"sn\":\"xxx\",\n\t\t\t\t\"validTo\":\"xxx\",\n\t\t\t\t\"status\":false,\n\t\t\t\t\"mple\":\"xxx\"\n\t\t\t}\n        ]\n    },\n    \"content\":{\n        \"email\":\"\",\n        \"phone\":\"\",\n        \"title\":\"\",\n        \"industry\":\"\"\n    }\n}",
-                    "type": "json"
-                }
-            ]
-        },
-        "success": {
-            "examples": [
-                {
                     "title": "Success-Response",
-                    "content": " {\n\t\"result\":\"\",\n\t\"status\":\"success\"\n}",
+                    "content": "{\n    \"status\": \"success\",\n    \"result\": {\n\t\t\"modelCode\": \"xxxx\",\n\t\t\"sn\": \"xxxx\",\n\t\t\"fingerprint\":\"xxx\",\n\t\t\"data\":\"xxx\",\n\t\t\"concurrent\":1,\n\t\t\"createAt\":\"xxx\",\n\t\t\"validUntil\":\"xxx\",\n\t\t\"surplusDays\":0.00,\n\t\t\"upgradeCount\":0,\n\t\t\"version\":\"xxx\",\n\t\t\"deviceModelCode\": \"xxxx\",\n\t\t\"deviceSN\": \"xxxx\",\n\t\t\"industry\":\"xxx\",\n\t\t\"addr\":\"xxx\",\n\t\t\"country\":\"xxx\",\n\t\t\"email\":\"xxx\",\n\t\t\"telephone\":\"xxx\",\n\t\t\"company\":\"xxx\",\n\t\t\"name\":\"xxx\"\n\t}\n}",
                     "type": "json"
                 }
             ]
         },
         "error": {
-            "examples": [
-                {
-                    "title": "Error-Response",
-                    "content": " {\n\t\"result\":\"xxx\",\n\t\"status\":\"fail\"\n}",
-                    "type": "json"
-                }
-            ]
-        },
-        "version": "0.0.0",
-        "filename": "services/tracing.go",
-        "groupTitle": "tracing"
-    },
-    {
-        "type": "post",
-        "url": "/dtta?type=log",
-        "title": "log记录",
-        "description": "<p>urlName: tracing  用户端软件或硬件日志记录</p>",
-        "group": "tracing",
-        "name": "logTracing",
-        "header": {
             "fields": {
-                "Header": [
+                "Error 4xx": [
                     {
-                        "group": "Header",
-                        "type": "String",
+                        "group": "Error 4xx",
                         "optional": false,
-                        "field": "X-Auth-AppId",
-                        "description": "<p>Required 您的应用获取到的appid</p>"
-                    }
-                ]
-            }
-        },
-        "parameter": {
-            "fields": {
-                "Parameter": [
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": true,
-                        "field": "modelName",
-                        "description": "<p>软硬件名称，是在型号管理中约定的唯一名</p>"
+                        "field": "notExist",
+                        "description": "<p>表示不存在，挂在SN字段下</p>"
                     },
                     {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": true,
-                        "field": "serialNum",
-                        "description": "<p>设备序列号，与modularExt中的ple中必须要提供1个至少</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": true,
-                        "field": "installCode",
-                        "description": "<p>本次安装时生成的唯一码</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": true,
-                        "field": "usageCode",
-                        "description": "<p>本次启动时生成的唯一码</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
+                        "group": "Error 4xx",
                         "optional": false,
-                        "field": "softwareName",
-                        "description": "<p>软件名称</p>"
+                        "field": "waitActive",
+                        "description": "<p>表示待激活，挂在SN字段下</p>"
                     },
                     {
-                        "group": "Parameter",
-                        "type": "String",
+                        "group": "Error 4xx",
                         "optional": false,
-                        "field": "softwareVer",
-                        "description": "<p>是在型号管理中约定的唯一名</p>"
+                        "field": "waitingAudit",
+                        "description": "<p>表示审核中，挂在SN字段下</p>"
                     },
                     {
-                        "group": "Parameter",
-                        "type": "String",
+                        "group": "Error 4xx",
                         "optional": false,
-                        "field": "tracingType",
-                        "description": "<p>采集类型</p>"
+                        "field": "inValid",
+                        "description": "<p>表示已经过期，挂在SN字段下</p>"
                     },
                     {
-                        "group": "Parameter",
-                        "type": "Bool",
-                        "optional": true,
-                        "field": "isOnline",
-                        "description": "<p>采集时是否联网,true/false</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
+                        "group": "Error 4xx",
                         "optional": false,
-                        "field": "startOn",
-                        "description": "<p>采集开始时间</p>"
+                        "field": "illegal",
+                        "description": "<p>表示非法，挂在SN字段下</p>"
                     },
                     {
-                        "group": "Parameter",
-                        "type": "String",
+                        "group": "Error 4xx",
                         "optional": false,
-                        "field": "endOn",
-                        "description": "<p>采集结束时间</p>"
+                        "field": "unactived",
+                        "description": "<p>表示未激活，挂在SN字段下</p>"
                     },
                     {
-                        "group": "Parameter",
-                        "type": "Object",
+                        "group": "Error 4xx",
                         "optional": false,
-                        "field": "osSoftExt",
-                        "description": "<p>系统扩展信息对象</p>"
+                        "field": "unknown",
+                        "description": "<p>表示未知错误，挂在SN字段下</p>"
                     },
                     {
-                        "group": "Parameter",
-                        "type": "String",
+                        "group": "Error 4xx",
                         "optional": false,
-                        "field": "osName",
-                        "description": "<p>系统名称</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": true,
-                        "field": "hostName",
-                        "description": "<p>主机名</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": true,
-                        "field": "osType",
-                        "description": "<p>操作系统类型</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": true,
-                        "field": "osVersion",
-                        "description": "<p>操作系统版本</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": true,
-                        "field": "lang",
-                        "description": "<p>系统语言，来自标准的https://www.science.co.il/language/Locale-codes.php，codePage值或是LCID String</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": false,
-                        "field": "resolution",
-                        "description": "<p>分辨率，以*分隔</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": true,
-                        "field": "installPath",
-                        "description": "<p>安装路径，指电脑本地路径</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "Object",
-                        "optional": true,
-                        "field": "browser",
-                        "description": "<p>默认浏览器信息对象</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": true,
-                        "field": "name",
-                        "description": "<p>默认浏览器名称</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": true,
-                        "field": "ver",
-                        "description": "<p>默认浏览器版本</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "Object",
-                        "optional": false,
-                        "field": "osHdExt",
-                        "description": "<p>硬件扩展信息对象</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "[]Object",
-                        "optional": false,
-                        "field": "cpu",
-                        "description": "<p>cpu对象</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "Integer",
-                        "optional": false,
-                        "field": "cpuCores",
-                        "description": "<p>cpu核数</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": false,
-                        "field": "cpuModel",
-                        "description": "<p>cpu型号</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": true,
-                        "field": "cpuVendor",
-                        "description": "<p>cpu品牌</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "[]Object",
-                        "optional": false,
-                        "field": "gpu",
-                        "description": "<p>gpu对象</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": false,
-                        "field": "gpuModel",
-                        "description": "<p>gpu型号</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "Integer",
-                        "optional": false,
-                        "field": "gpuMemSize",
-                        "description": "<p>gpu内存大小，单位是byte</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": true,
-                        "field": "gpuVendor",
-                        "description": "<p>gpu品牌</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "Integer",
-                        "optional": false,
-                        "field": "memSize",
-                        "description": "<p>内存大小，单位是byte</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "Integer",
-                        "optional": false,
-                        "field": "hddSize",
-                        "description": "<p>硬盘大小，单位是byte</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "Integer",
-                        "optional": false,
-                        "field": "hddRemainSize",
-                        "description": "<p>硬盘分区剩余大小，单位是byte</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "Object",
-                        "optional": true,
-                        "field": "modularExt",
-                        "description": "<p>配件或硬件扩展信息对象</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": true,
-                        "field": "ple",
-                        "description": "<p>加密串号</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "[]Object",
-                        "optional": true,
-                        "field": "modular",
-                        "description": "<p>模块对象</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": true,
-                        "field": "mple",
-                        "description": "<p>加密串号</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": true,
-                        "field": "sn",
-                        "description": "<p>序列号</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": true,
-                        "field": "validTo",
-                        "description": "<p>有效期截止时间</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "Bool",
-                        "optional": true,
-                        "field": "status",
-                        "description": "<p>状态，是启用还是禁用状态,true/false</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": false,
-                        "field": "content",
-                        "description": "<p>内容，一般是日志文件上传后的内容，以逗号分隔</p>"
+                        "field": "serverErr",
+                        "description": "<p>表示服务器错误，挂在SN字段下</p>"
                     }
                 ]
             },
             "examples": [
                 {
-                    "title": "Request-Example:",
-                    "content": "{\n    \"modelName\":\"afinia_3d_einscan_s\",\n    \"serialNum\":\"\",\n    \"installCode\":\"xxx\",\n    \"usageCode\":\"xxx\",\n    \"softwareName\":\"einscan\",\n    \"softwareVer\":\"2.7.0.5\",\n    \"tracingType\":\"log\",\n    \"isOnline\":true,\n    \"startOn\":\"2017-01-28T12:04:04Z\",\n    \"endOn\":\"2017-01-29T12:04:04Z\",\n    \"osSoftExt\":{\n        \"osName\":\"mac\",\n        \"hostName\":\"xxx\",\n        \"osType\":\"xxx\",\n        \"osVersion\":\"xxx\",\n        \"lang\":\"cn\",\n        \"resolution\":\"2478*1468\",\n        \"installPath\":\"afsdasd\",\n        \"browser\":{\n            \"name\":\"chrome\",\n            \"ver\":\"54.98\"\n        }\n    },\n    \"osHdExt\":{\n        \"cpu\":[{\n            \"cpuCores\":8,\n            \"cpuModel\":\"xeon\"\n        }],\n        \"memSize\":8096,\n        \"gpu\":[{\n            \"gpuModel\":\"intel hd4000\",\n            \"gpuMemSize\": 3900987777\n        }],\n        \"hddSize\":7866555,\n        \"hddRemainSize\":98792323232\n    },\n    \"modularExt\":{\n        \"ple\":\"588ea5a2b4fa8c29759e579d-V200.ple\",\n        \"modular\": [\n\t\t\t{\n\t\t\t\t\"name\":\"xxx\",\n\t\t\t\t\"sn\":\"xxx\",\n\t\t\t\t\"validTo\":\"xxx\",\n\t\t\t\t\"status\":false,\n\t\t\t\t\"mple\":\"xxx\"\n\t\t\t}\n        ]\n    },\n    \"content\":\"xxx\"\n}",
-                    "type": "json"
-                }
-            ]
-        },
-        "success": {
-            "examples": [
-                {
-                    "title": "Success-Response",
-                    "content": " {\n\t\"result\":\"\",\n\t\"status\":\"success\"\n}",
-                    "type": "json"
-                }
-            ]
-        },
-        "error": {
-            "examples": [
-                {
-                    "title": "Error-Response",
-                    "content": " {\n\t\"result\":\"xxx\",\n\t\"status\":\"fail\"\n}",
+                    "title": "Error-Response:",
+                    "content": "{\n    \"status\": \"fail\",\n    \"result\": \"{\\\"SN\\\":\\\"notExist\\\"}\"\n    }\n}",
                     "type": "json"
                 }
             ]
         },
         "version": "0.0.0",
-        "filename": "services/tracing.go",
-        "groupTitle": "tracing"
+        "filename": "services/ed.go",
+        "groupTitle": "EncryptDecrypt"
     },
     {
         "type": "post",
-        "url": "/dtta?type=scan",
-        "title": "扫描记录跟踪",
-        "description": "<p>urlName: tracing  从新建、载入工程到保存操作记录</p>",
-        "group": "tracing",
-        "name": "scanTracing",
+        "url": "/ed/trailAccount",
+        "title": "3加解密授权试用期客户信息录入接口",
+        "description": "<p>urlName: trailAccountED 集成方在试用时提交用户录入的客户信息, 必须是试用未结束的情况下可以录入成功；字段错误提示用户修正，服务器错误(serverErr)则提示用户稍候再试，其它返回非法(illegal)，提示用户去激活；</p>",
+        "group": "EncryptDecrypt",
+        "name": "trailAccountED",
         "header": {
             "fields": {
                 "Header": [
@@ -2827,2662 +469,57 @@ apiInfo = [
                         "group": "Parameter",
                         "type": "String",
                         "optional": false,
-                        "field": "modelName",
-                        "description": "<p>软硬件名称，是在型号管理中约定的唯一名</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": true,
-                        "field": "serialNum",
-                        "description": "<p>设备序列号，与modularExt中的ple中必须要提供1个至少</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": true,
-                        "field": "installCode",
-                        "description": "<p>本次安装时生成的唯一码</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": true,
-                        "field": "usageCode",
-                        "description": "<p>本次启动时生成的唯一码</p>"
+                        "field": "modelCode",
+                        "description": "<p>约定的唯一型号名，比如solidEdge，一般是集成软件的约定名称或是产品线指定的设备唯一型号名</p>"
                     },
                     {
                         "group": "Parameter",
                         "type": "String",
                         "optional": false,
-                        "field": "softwareName",
-                        "description": "<p>软件名称</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": false,
-                        "field": "softwareVer",
-                        "description": "<p>是在型号管理中约定的唯一名</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": false,
-                        "field": "tracingType",
-                        "description": "<p>采集类型</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "Bool",
-                        "optional": true,
-                        "field": "isOnline",
-                        "description": "<p>采集时是否联网,true/false</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": false,
-                        "field": "startOn",
-                        "description": "<p>采集开始时间</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": false,
-                        "field": "endOn",
-                        "description": "<p>采集结束时间</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "Object",
-                        "optional": false,
-                        "field": "osSoftExt",
-                        "description": "<p>系统扩展信息对象</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": false,
-                        "field": "osName",
-                        "description": "<p>系统名称</p>"
+                        "field": "fingerprint",
+                        "description": "<p>SolidEdge运行电脑或是设备的指纹</p>"
                     },
                     {
                         "group": "Parameter",
                         "type": "String",
                         "optional": true,
-                        "field": "hostName",
-                        "description": "<p>主机名</p>"
+                        "field": "deviceModelCode",
+                        "description": "<p>约定的设备唯一型号名，比如einscan</p>"
                     },
                     {
                         "group": "Parameter",
                         "type": "String",
                         "optional": true,
-                        "field": "osType",
-                        "description": "<p>操作系统类型</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": true,
-                        "field": "osVersion",
-                        "description": "<p>操作系统版本</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": true,
-                        "field": "lang",
-                        "description": "<p>系统语言，来自标准的https://www.science.co.il/language/Locale-codes.php，codePage值或是LCID String</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": false,
-                        "field": "resolution",
-                        "description": "<p>分辨率，以*分隔</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": true,
-                        "field": "installPath",
-                        "description": "<p>安装路径，指电脑本地路径</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "Object",
-                        "optional": true,
-                        "field": "browser",
-                        "description": "<p>默认浏览器信息对象</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": true,
-                        "field": "name",
-                        "description": "<p>默认浏览器名称</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": true,
-                        "field": "ver",
-                        "description": "<p>默认浏览器版本</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "Object",
-                        "optional": false,
-                        "field": "osHdExt",
-                        "description": "<p>硬件扩展信息对象</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "[]Object",
-                        "optional": false,
-                        "field": "cpu",
-                        "description": "<p>cpu对象</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "Integer",
-                        "optional": false,
-                        "field": "cpuCores",
-                        "description": "<p>cpu核数</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": false,
-                        "field": "cpuModel",
-                        "description": "<p>cpu型号</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": true,
-                        "field": "cpuVendor",
-                        "description": "<p>cpu品牌</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "[]Object",
-                        "optional": false,
-                        "field": "gpu",
-                        "description": "<p>gpu对象</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": false,
-                        "field": "gpuModel",
-                        "description": "<p>gpu型号</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "Integer",
-                        "optional": false,
-                        "field": "gpuMemSize",
-                        "description": "<p>gpu内存大小，单位是byte</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": true,
-                        "field": "gpuVendor",
-                        "description": "<p>gpu品牌</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "Integer",
-                        "optional": false,
-                        "field": "memSize",
-                        "description": "<p>内存大小，单位是byte</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "Integer",
-                        "optional": false,
-                        "field": "hddSize",
-                        "description": "<p>硬盘大小，单位是byte</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "Integer",
-                        "optional": false,
-                        "field": "hddRemainSize",
-                        "description": "<p>硬盘分区剩余大小，单位是byte</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "Object",
-                        "optional": true,
-                        "field": "modularExt",
-                        "description": "<p>配件或硬件扩展信息对象</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": true,
-                        "field": "ple",
-                        "description": "<p>加密串号</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "[]Object",
-                        "optional": true,
-                        "field": "modular",
-                        "description": "<p>模块对象</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": true,
-                        "field": "mple",
-                        "description": "<p>加密串号</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": true,
-                        "field": "sn",
-                        "description": "<p>序列号</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": true,
-                        "field": "validTo",
-                        "description": "<p>有效期截止时间</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "Bool",
-                        "optional": true,
-                        "field": "status",
-                        "description": "<p>状态，是启用还是禁用状态,true/false</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "Object",
-                        "optional": false,
-                        "field": "content",
-                        "description": "<p>采集内容</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "[]Object",
-                        "optional": true,
-                        "field": "mode",
-                        "description": "<p>扫描模式</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": false,
-                        "field": "classsify",
-                        "description": "<p>模式类型</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "Integer",
-                        "optional": true,
-                        "field": "tuntableSteps",
-                        "description": "<p>转台步数</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "[]String",
-                        "optional": false,
-                        "field": "alignMode",
-                        "description": "<p>拼接模式</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": true,
-                        "field": "hdr",
-                        "description": "<p>双曝光</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": false,
-                        "field": "texture",
-                        "description": "<p>启用纹理</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "Integer",
-                        "optional": true,
-                        "field": "frameRate",
-                        "description": "<p>帧数</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "Integer",
-                        "optional": true,
-                        "field": "totalPoint",
-                        "description": "<p>点数</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "Integer",
-                        "optional": false,
-                        "field": "pointDis",
-                        "description": "<p>点距</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": true,
-                        "field": "handHeldPointGenWay",
-                        "description": "<p>手持点云的方式</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": true,
-                        "field": "meshType",
-                        "description": "<p>封装方式</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "Object",
-                        "optional": true,
-                        "field": "box",
-                        "description": "<p>数据尺寸</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "Integer",
-                        "optional": false,
-                        "field": "length",
-                        "description": "<p>长</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "Integer",
-                        "optional": false,
-                        "field": "width",
-                        "description": "<p>宽</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "Integer",
-                        "optional": false,
-                        "field": "height",
-                        "description": "<p>高</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": true,
-                        "field": "fileName",
-                        "description": "<p>文件名</p>"
-                    }
-                ]
-            },
-            "examples": [
-                {
-                    "title": "Request-Example:",
-                    "content": "{\n    \"modelName\":\"afinia_3d_einscan_s\",\n    \"serialNum\":\"\",\n    \"installCode\":\"xxx\",\n    \"usageCode\":\"xxx\",\n    \"softwareName\":\"einscan\",\n    \"softwareVer\":\"2.7.0.5\",\n    \"tracingType\":\"scan\",\n    \"isOnline\":true,\n    \"startOn\":\"2017-01-28T12:04:04Z\",\n    \"endOn\":\"2017-01-29T12:04:04Z\",\n    \"osSoftExt\":{\n        \"osName\":\"mac\",\n        \"hostName\":\"xxx\",\n        \"osType\":\"xxx\",\n        \"osVersion\":\"xxx\",\n        \"lang\":\"cn\",\n        \"resolution\":\"2478*1468\",\n        \"installPath\":\"afsdasd\",\n        \"browser\":{\n            \"name\":\"chrome\",\n            \"ver\":\"54.98\"\n        }\n    },\n    \"osHdExt\":{\n        \"cpu\":[{\n            \"cpuCores\":8,\n            \"cpuModel\":\"xeon\"\n        }],\n        \"memSize\":8096,\n        \"gpu\":[{\n            \"gpuModel\":\"intel hd4000\",\n            \"gpuMemSize\": 3900987777\n        }],\n        \"hddSize\":7866555,\n        \"hddRemainSize\":98792323232\n    },\n    \"modularExt\":{\n        \"ple\":\"588ea5a2b4fa8c29759e579d-V200.ple\",\n        \"modular\": [\n\t\t\t{\n\t\t\t\t\"name\":\"xxx\",\n\t\t\t\t\"sn\":\"xxx\",\n\t\t\t\t\"validTo\":\"xxx\",\n\t\t\t\t\"status\":false,\n\t\t\t\t\"mple\":\"xxx\"\n\t\t\t}\n        ]\n    },\n    \"content\":{\n        \"mode\":[{\n\t\t\t\"startOn\":\"2017-01-28T12:04:04Z\",\n\t\t\t\"endOn\":\"2017-01-28T12:04:04Z\",\n\t\t\t\"tuntableSteps\":44,\n\t\t\t\"alignMode\":[\n\t\t\t\t\"Markers\", \"Mixed\"\n\t\t\t],\n\t\t\t\"hdr\":\"yes\",,\n\t\t\t\"modular\": [{\n\t\t\t\t\"name\":\"xxx\",\n\t\t\t\t\"sn\":\"xxx\",\n\t\t\t\t\"validTo\":\"xxx\",\n\t\t\t\t\"status\":false,\n\t\t\t\t\"mple\":\"xxx\"\n\t\t\t}],\n\t\t\t\"classsify\":\"HandheldHD\"\n        }],\n        \"texture\":\"yes\",\n        \"totalPoint\":9000,\n        \"frameRate\":15,\n        \"pointDis\":900.88,\n\t\t\"handHeldPointGenWay\":\"quality\",\n\t\t\"meshType\":\"none\",\n\t\t\"fileName\":\"dasfds\",\n\t\t\"box\":{\n\t\t\t\"length\":44.34,\n\t\t\t\"width\":44.34,\n\t\t\t\"height\":44.34\n\t\t}\n    }\n}",
-                    "type": "json"
-                }
-            ]
-        },
-        "success": {
-            "examples": [
-                {
-                    "title": "Success-Response",
-                    "content": " {\n\t\"result\":\"\",\n\t\"status\":\"success\"\n}",
-                    "type": "json"
-                }
-            ]
-        },
-        "error": {
-            "examples": [
-                {
-                    "title": "Error-Response",
-                    "content": " {\n\t\"result\":\"xxx\",\n\t\"status\":\"fail\"\n}",
-                    "type": "json"
-                }
-            ]
-        },
-        "version": "0.0.0",
-        "filename": "services/tracing.go",
-        "groupTitle": "tracing"
-    },
-    {
-        "type": "post",
-        "url": "/dtta?type=score",
-        "title": "评分记录跟踪",
-        "description": "<p>urlName: tracing  一次评分操作记录</p>",
-        "group": "tracing",
-        "name": "scoreTracing",
-        "header": {
-            "fields": {
-                "Header": [
-                    {
-                        "group": "Header",
-                        "type": "String",
-                        "optional": false,
-                        "field": "X-Auth-AppId",
-                        "description": "<p>Required 您的应用获取到的appid</p>"
-                    }
-                ]
-            }
-        },
-        "parameter": {
-            "fields": {
-                "Parameter": [
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": true,
-                        "field": "modelName",
-                        "description": "<p>软硬件名称，是在型号管理中约定的唯一名</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": true,
-                        "field": "serialNum",
-                        "description": "<p>设备序列号，与modularExt中的ple中必须要提供1个至少</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": true,
-                        "field": "installCode",
-                        "description": "<p>本次安装时生成的唯一码</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": true,
-                        "field": "usageCode",
-                        "description": "<p>本次启动时生成的唯一码</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": false,
-                        "field": "softwareName",
-                        "description": "<p>软件名称</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": false,
-                        "field": "softwareVer",
-                        "description": "<p>是在型号管理中约定的唯一名</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": false,
-                        "field": "tracingType",
-                        "description": "<p>采集类型</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "Bool",
-                        "optional": true,
-                        "field": "isOnline",
-                        "description": "<p>采集时是否联网,true/false</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": false,
-                        "field": "startOn",
-                        "description": "<p>采集开始时间</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": false,
-                        "field": "endOn",
-                        "description": "<p>采集结束时间</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "Object",
-                        "optional": false,
-                        "field": "osSoftExt",
-                        "description": "<p>系统扩展信息对象</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": false,
-                        "field": "osName",
-                        "description": "<p>系统名称</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": true,
-                        "field": "hostName",
-                        "description": "<p>主机名</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": true,
-                        "field": "osType",
-                        "description": "<p>操作系统类型</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": true,
-                        "field": "osVersion",
-                        "description": "<p>操作系统版本</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": true,
-                        "field": "lang",
-                        "description": "<p>系统语言，来自标准的https://www.science.co.il/language/Locale-codes.php，codePage值或是LCID String</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": false,
-                        "field": "resolution",
-                        "description": "<p>分辨率，以*分隔</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": true,
-                        "field": "installPath",
-                        "description": "<p>安装路径，指电脑本地路径</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "Object",
-                        "optional": true,
-                        "field": "browser",
-                        "description": "<p>默认浏览器信息对象</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": true,
-                        "field": "name",
-                        "description": "<p>默认浏览器名称</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": true,
-                        "field": "ver",
-                        "description": "<p>默认浏览器版本</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "Object",
-                        "optional": false,
-                        "field": "osHdExt",
-                        "description": "<p>硬件扩展信息对象</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "[]Object",
-                        "optional": false,
-                        "field": "cpu",
-                        "description": "<p>cpu对象</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "Integer",
-                        "optional": false,
-                        "field": "cpuCores",
-                        "description": "<p>cpu核数</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": false,
-                        "field": "cpuModel",
-                        "description": "<p>cpu型号</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": true,
-                        "field": "cpuVendor",
-                        "description": "<p>cpu品牌</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "[]Object",
-                        "optional": false,
-                        "field": "gpu",
-                        "description": "<p>gpu对象</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": false,
-                        "field": "gpuModel",
-                        "description": "<p>gpu型号</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "Integer",
-                        "optional": false,
-                        "field": "gpuMemSize",
-                        "description": "<p>gpu内存大小，单位是byte</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": true,
-                        "field": "gpuVendor",
-                        "description": "<p>gpu品牌</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "Integer",
-                        "optional": false,
-                        "field": "memSize",
-                        "description": "<p>内存大小，单位是byte</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "Integer",
-                        "optional": false,
-                        "field": "hddSize",
-                        "description": "<p>硬盘大小，单位是byte</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "Integer",
-                        "optional": false,
-                        "field": "hddRemainSize",
-                        "description": "<p>硬盘分区剩余大小，单位是byte</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "Object",
-                        "optional": true,
-                        "field": "modularExt",
-                        "description": "<p>配件或硬件扩展信息对象</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": true,
-                        "field": "ple",
-                        "description": "<p>加密串号</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "[]Object",
-                        "optional": true,
-                        "field": "modular",
-                        "description": "<p>模块对象</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": true,
-                        "field": "mple",
-                        "description": "<p>加密串号</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": true,
-                        "field": "sn",
-                        "description": "<p>序列号</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": true,
-                        "field": "validTo",
-                        "description": "<p>有效期截止时间</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "Bool",
-                        "optional": true,
-                        "field": "status",
-                        "description": "<p>状态，是启用还是禁用状态,true/false</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "Object",
-                        "optional": false,
-                        "field": "content",
-                        "description": "<p>采集内容</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "Integer",
-                        "optional": false,
-                        "field": "score",
-                        "description": "<p>分数</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": true,
-                        "field": "comment",
-                        "description": "<p>评分备注</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": true,
-                        "field": "industry",
-                        "description": "<p>评分人所在行业</p>"
-                    }
-                ]
-            },
-            "examples": [
-                {
-                    "title": "Request-Example:",
-                    "content": "{\n    \"modelName\":\"afinia_3d_einscan_s\",\n    \"serialNum\":\"\",\n    \"installCode\":\"xxx\",\n    \"usageCode\":\"xxx\",\n    \"softwareName\":\"einscan\",\n    \"softwareVer\":\"2.7.0.5\",\n    \"tracingType\":\"score\",\n    \"isOnline\":true,\n    \"startOn\":\"2017-01-28T12:04:04Z\",\n    \"endOn\":\"2017-01-29T12:04:04Z\",\n    \"osSoftExt\":{\n        \"osName\":\"mac\",\n        \"hostName\":\"xxx\",\n        \"osType\":\"xxx\",\n        \"osVersion\":\"xxx\",\n        \"lang\":\"cn\",\n        \"resolution\":\"2478*1468\",\n        \"installPath\":\"afsdasd\",\n        \"browser\":{\n            \"name\":\"chrome\",\n            \"ver\":\"54.98\"\n        }\n    },\n    \"osHdExt\":{\n        \"cpu\":[{\n            \"cpuCores\":8,\n            \"cpuModel\":\"xeon\"\n        }],\n        \"memSize\":8096,\n        \"gpu\":[{\n            \"gpuModel\":\"intel hd4000\",\n            \"gpuMemSize\": 3900987777\n        }],\n        \"hddSize\":7866555,\n        \"hddRemainSize\":98792323232\n    },\n    \"modularExt\":{\n        \"ple\":\"588ea5a2b4fa8c29759e579d-V200.ple\",\n        \"modular\": [\n\t\t\t{\n\t\t\t\t\"name\":\"xxx\",\n\t\t\t\t\"sn\":\"xxx\",\n\t\t\t\t\"validTo\":\"xxx\",\n\t\t\t\t\"status\":false,\n\t\t\t\t\"mple\":\"xxx\"\n\t\t\t}\n        ]\n    },\n    \"content\":{\n        \"score\":5,\n        \"comment\":\"fadsfasd\",\n        \"industry\":\"dddd\"\n    }\n}",
-                    "type": "json"
-                }
-            ]
-        },
-        "success": {
-            "examples": [
-                {
-                    "title": "Success-Response",
-                    "content": " {\n\t\"result\":\"\",\n\t\"status\":\"success\"\n}",
-                    "type": "json"
-                }
-            ]
-        },
-        "error": {
-            "examples": [
-                {
-                    "title": "Error-Response",
-                    "content": " {\n\t\"result\":\"xxx\",\n\t\"status\":\"fail\"\n}",
-                    "type": "json"
-                }
-            ]
-        },
-        "version": "0.0.0",
-        "filename": "services/tracing.go",
-        "groupTitle": "tracing"
-    },
-    {
-        "type": "post",
-        "url": "/dtta?type=setting",
-        "title": "软硬件设置记录跟踪",
-        "description": "<p>urlName: tracing  软硬件设置变动记录</p>",
-        "group": "tracing",
-        "name": "settingTracing",
-        "header": {
-            "fields": {
-                "Header": [
-                    {
-                        "group": "Header",
-                        "type": "String",
-                        "optional": false,
-                        "field": "X-Auth-AppId",
-                        "description": "<p>Required 您的应用获取到的appid</p>"
-                    }
-                ]
-            }
-        },
-        "parameter": {
-            "fields": {
-                "Parameter": [
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": true,
-                        "field": "modelName",
-                        "description": "<p>软硬件名称，是在型号管理中约定的唯一名</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": true,
-                        "field": "serialNum",
+                        "field": "deviceSN",
                         "description": "<p>设备序列号</p>"
                     },
                     {
                         "group": "Parameter",
                         "type": "String",
-                        "optional": true,
-                        "field": "installCode",
-                        "description": "<p>本次安装时生成的唯一码</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": true,
-                        "field": "usageCode",
-                        "description": "<p>本次启动时生成的唯一码</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
                         "optional": false,
-                        "field": "softwareName",
-                        "description": "<p>软件名称</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": false,
-                        "field": "softwareVer",
-                        "description": "<p>是在型号管理中约定的唯一名</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": false,
-                        "field": "tracingType",
-                        "description": "<p>采集类型</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "Bool",
-                        "optional": true,
-                        "field": "isOnline",
-                        "description": "<p>采集时是否联网,true/false</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": false,
-                        "field": "startOn",
-                        "description": "<p>采集开始时间</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": false,
-                        "field": "endOn",
-                        "description": "<p>采集结束时间</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "Object",
-                        "optional": false,
-                        "field": "osSoftExt",
-                        "description": "<p>系统扩展信息对象</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": false,
-                        "field": "osName",
-                        "description": "<p>系统名称</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": true,
-                        "field": "hostName",
-                        "description": "<p>主机名</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": true,
-                        "field": "osType",
-                        "description": "<p>操作系统类型</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": true,
-                        "field": "osVersion",
-                        "description": "<p>操作系统版本</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": true,
-                        "field": "lang",
-                        "description": "<p>系统语言，来自标准的https://www.science.co.il/language/Locale-codes.php，codePage值或是LCID String</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": false,
-                        "field": "resolution",
-                        "description": "<p>分辨率，以*分隔</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": true,
-                        "field": "installPath",
-                        "description": "<p>安装路径，指电脑本地路径</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "Object",
-                        "optional": true,
-                        "field": "browser",
-                        "description": "<p>默认浏览器信息对象</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": true,
-                        "field": "name",
-                        "description": "<p>默认浏览器名称</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": true,
-                        "field": "ver",
-                        "description": "<p>默认浏览器版本</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "Object",
-                        "optional": false,
-                        "field": "osHdExt",
-                        "description": "<p>硬件扩展信息对象</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "[]Object",
-                        "optional": false,
-                        "field": "cpu",
-                        "description": "<p>cpu对象</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "Integer",
-                        "optional": false,
-                        "field": "cpuCores",
-                        "description": "<p>cpu核数</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": false,
-                        "field": "cpuModel",
-                        "description": "<p>cpu型号</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": true,
-                        "field": "cpuVendor",
-                        "description": "<p>cpu品牌</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "[]Object",
-                        "optional": false,
-                        "field": "gpu",
-                        "description": "<p>gpu对象</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": false,
-                        "field": "gpuModel",
-                        "description": "<p>gpu型号</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "Integer",
-                        "optional": false,
-                        "field": "gpuMemSize",
-                        "description": "<p>gpu内存大小，单位是byte</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": true,
-                        "field": "gpuVendor",
-                        "description": "<p>gpu品牌</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "Integer",
-                        "optional": false,
-                        "field": "memSize",
-                        "description": "<p>内存大小，单位是byte</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "Integer",
-                        "optional": false,
-                        "field": "hddSize",
-                        "description": "<p>硬盘大小，单位是byte</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "Integer",
-                        "optional": false,
-                        "field": "hddRemainSize",
-                        "description": "<p>硬盘分区剩余大小，单位是byte</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "Object",
-                        "optional": true,
-                        "field": "modularExt",
-                        "description": "<p>配件或硬件扩展信息对象</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": true,
-                        "field": "ple",
-                        "description": "<p>加密串号</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "[]Object",
-                        "optional": true,
-                        "field": "modular",
-                        "description": "<p>模块对象</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": true,
-                        "field": "mple",
-                        "description": "<p>加密串号</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": true,
                         "field": "sn",
-                        "description": "<p>序列号</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": true,
-                        "field": "validTo",
-                        "description": "<p>有效期截止时间</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "Bool",
-                        "optional": true,
-                        "field": "status",
-                        "description": "<p>状态，是启用还是禁用状态,true/false</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "Object",
-                        "optional": false,
-                        "field": "content",
-                        "description": "<p>采集内容</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": true,
-                        "field": "enableTracing",
-                        "description": "<p>是否允许采集</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": true,
-                        "field": "other",
-                        "description": "<p>其它设置，一般是软硬件中的设置界面上的参数的json对象字符串</p>"
-                    }
-                ]
-            },
-            "examples": [
-                {
-                    "title": "Request-Example:",
-                    "content": "{\n    \"modelName\":\"afinia_3d_einscan_s\",\n    \"serialNum\":\"\",\n    \"installCode\":\"xxx\",\n    \"usageCode\":\"xxx\",\n    \"softwareName\":\"einscan\",\n    \"softwareVer\":\"2.7.0.5\",\n    \"tracingType\":\"setting\",\n    \"isOnline\":true,\n    \"startOn\":\"2017-01-28T12:04:04Z\",\n    \"endOn\":\"2017-01-29T12:04:04Z\",\n    \"osSoftExt\":{\n        \"osName\":\"mac\",\n        \"hostName\":\"xxx\",\n        \"osType\":\"xxx\",\n        \"osVersion\":\"xxx\",\n        \"lang\":\"cn\",\n        \"resolution\":\"2478*1468\",\n        \"installPath\":\"afsdasd\",\n        \"browser\":{\n            \"name\":\"chrome\",\n            \"ver\":\"54.98\"\n        }\n    },\n    \"osHdExt\":{\n        \"cpu\":[{\n            \"cpuCores\":8,\n            \"cpuModel\":\"xeon\"\n        }],\n        \"memSize\":8096,\n        \"gpu\":[{\n            \"gpuModel\":\"intel hd4000\",\n            \"gpuMemSize\": 3900987777\n        }],\n        \"hddSize\":7866555,\n        \"hddRemainSize\":98792323232\n    },\n    \"modularExt\":{\n        \"ple\":\"588ea5a2b4fa8c29759e579d-V200.ple\",\n        \"modular\": [\n\t\t\t{\n\t\t\t\t\"name\":\"xxx\",\n\t\t\t\t\"sn\":\"xxx\",\n\t\t\t\t\"validTo\":\"xxx\",\n\t\t\t\t\"status\":false,\n\t\t\t\t\"mple\":\"xxx\"\n\t\t\t}\n        ]\n    },\n    \"content\":{\n        \"enableTracing\":\"\",\n        \"other\":\"\"\n    }\n}",
-                    "type": "json"
-                }
-            ]
-        },
-        "success": {
-            "examples": [
-                {
-                    "title": "Success-Response",
-                    "content": " {\n\t\"result\":\"\",\n\t\"status\":\"success\"\n}",
-                    "type": "json"
-                }
-            ]
-        },
-        "error": {
-            "examples": [
-                {
-                    "title": "Error-Response",
-                    "content": " {\n\t\"result\":\"xxx\",\n\t\"status\":\"fail\"\n}",
-                    "type": "json"
-                }
-            ]
-        },
-        "version": "0.0.0",
-        "filename": "services/tracing.go",
-        "groupTitle": "tracing"
-    },
-    {
-        "type": "post",
-        "url": "/dtta?type=share",
-        "title": "分享使用记录跟踪",
-        "description": "<p>urlName: tracing  一次分享操作记录</p>",
-        "group": "tracing",
-        "name": "shareTracing",
-        "header": {
-            "fields": {
-                "Header": [
-                    {
-                        "group": "Header",
-                        "type": "String",
-                        "optional": false,
-                        "field": "X-Auth-AppId",
-                        "description": "<p>Required 您的应用获取到的appid</p>"
-                    }
-                ]
-            }
-        },
-        "parameter": {
-            "fields": {
-                "Parameter": [
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": true,
-                        "field": "modelName",
-                        "description": "<p>软硬件名称，是在型号管理中约定的唯一名</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": true,
-                        "field": "serialNum",
-                        "description": "<p>设备序列号，与modularExt中的ple中必须要提供1个至少</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": true,
-                        "field": "installCode",
-                        "description": "<p>本次安装时生成的唯一码</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": true,
-                        "field": "usageCode",
-                        "description": "<p>本次启动时生成的唯一码</p>"
+                        "description": "<p>SolidEdge的激活码，如果不是solidEdge则是设备的序列号</p>"
                     },
                     {
                         "group": "Parameter",
                         "type": "String",
                         "optional": false,
-                        "field": "softwareName",
-                        "description": "<p>软件名称</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": false,
-                        "field": "softwareVer",
-                        "description": "<p>是在型号管理中约定的唯一名</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": false,
-                        "field": "tracingType",
-                        "description": "<p>采集类型</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "Bool",
-                        "optional": true,
-                        "field": "isOnline",
-                        "description": "<p>采集时是否联网,true/false</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": false,
-                        "field": "startOn",
-                        "description": "<p>采集开始时间</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": false,
-                        "field": "endOn",
-                        "description": "<p>采集结束时间</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "Object",
-                        "optional": false,
-                        "field": "osSoftExt",
-                        "description": "<p>系统扩展信息对象</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": false,
-                        "field": "osName",
-                        "description": "<p>系统名称</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": true,
-                        "field": "hostName",
-                        "description": "<p>主机名</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": true,
-                        "field": "osType",
-                        "description": "<p>操作系统类型</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": true,
-                        "field": "osVersion",
-                        "description": "<p>操作系统版本</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": true,
-                        "field": "lang",
-                        "description": "<p>系统语言，来自标准的https://www.science.co.il/language/Locale-codes.php，codePage值或是LCID String</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": false,
-                        "field": "resolution",
-                        "description": "<p>分辨率，以*分隔</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": true,
-                        "field": "installPath",
-                        "description": "<p>安装路径，指电脑本地路径</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "Object",
-                        "optional": true,
-                        "field": "browser",
-                        "description": "<p>默认浏览器信息对象</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": true,
                         "field": "name",
-                        "description": "<p>默认浏览器名称</p>"
+                        "description": "<p>姓名</p>"
                     },
                     {
                         "group": "Parameter",
                         "type": "String",
-                        "optional": true,
-                        "field": "ver",
-                        "description": "<p>默认浏览器版本</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "Object",
-                        "optional": false,
-                        "field": "osHdExt",
-                        "description": "<p>硬件扩展信息对象</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "[]Object",
-                        "optional": false,
-                        "field": "cpu",
-                        "description": "<p>cpu对象</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "Integer",
-                        "optional": false,
-                        "field": "cpuCores",
-                        "description": "<p>cpu核数</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": false,
-                        "field": "cpuModel",
-                        "description": "<p>cpu型号</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": true,
-                        "field": "cpuVendor",
-                        "description": "<p>cpu品牌</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "[]Object",
-                        "optional": false,
-                        "field": "gpu",
-                        "description": "<p>gpu对象</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": false,
-                        "field": "gpuModel",
-                        "description": "<p>gpu型号</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "Integer",
-                        "optional": false,
-                        "field": "gpuMemSize",
-                        "description": "<p>gpu内存大小，单位是byte</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": true,
-                        "field": "gpuVendor",
-                        "description": "<p>gpu品牌</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "Integer",
-                        "optional": false,
-                        "field": "memSize",
-                        "description": "<p>内存大小，单位是byte</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "Integer",
-                        "optional": false,
-                        "field": "hddSize",
-                        "description": "<p>硬盘大小，单位是byte</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "Integer",
-                        "optional": false,
-                        "field": "hddRemainSize",
-                        "description": "<p>硬盘分区剩余大小，单位是byte</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "Object",
-                        "optional": true,
-                        "field": "modularExt",
-                        "description": "<p>配件或硬件扩展信息对象</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": true,
-                        "field": "ple",
-                        "description": "<p>加密串号</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "[]Object",
-                        "optional": true,
-                        "field": "modular",
-                        "description": "<p>模块对象</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": true,
-                        "field": "mple",
-                        "description": "<p>加密串号</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": true,
-                        "field": "sn",
-                        "description": "<p>序列号</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": true,
-                        "field": "validTo",
-                        "description": "<p>有效期截止时间</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "Bool",
-                        "optional": true,
-                        "field": "status",
-                        "description": "<p>状态，是启用还是禁用状态,true/false</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "Object",
-                        "optional": false,
-                        "field": "content",
-                        "description": "<p>采集内容</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": false,
-                        "field": "target",
-                        "description": "<p>分享目标</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": false,
-                        "field": "account",
-                        "description": "<p>分享的目标账号</p>"
-                    }
-                ]
-            },
-            "examples": [
-                {
-                    "title": "Request-Example:",
-                    "content": "{\n    \"modelName\":\"afinia_3d_einscan_s\",\n    \"serialNum\":\"\",\n    \"installCode\":\"xxx\",\n    \"usageCode\":\"xxx\",\n    \"softwareName\":\"einscan\",\n    \"softwareVer\":\"2.7.0.5\",\n    \"tracingType\":\"share\",\n    \"isOnline\":true,\n    \"startOn\":\"2017-01-28T12:04:04Z\",\n    \"endOn\":\"2017-01-29T12:04:04Z\",\n    \"osSoftExt\":{\n        \"osName\":\"mac\",\n        \"hostName\":\"xxx\",\n        \"osType\":\"xxx\",\n        \"osVersion\":\"xxx\",\n        \"lang\":\"cn\",\n        \"resolution\":\"2478*1468\",\n        \"installPath\":\"afsdasd\",\n        \"browser\":{\n            \"name\":\"chrome\",\n            \"ver\":\"54.98\"\n        }\n    },\n    \"osHdExt\":{\n        \"cpu\":[{\n            \"cpuCores\":8,\n            \"cpuModel\":\"xeon\"\n        }],\n        \"memSize\":8096,\n        \"gpu\":[{\n            \"gpuModel\":\"intel hd4000\",\n            \"gpuMemSize\": 3900987777\n        }],\n        \"hddSize\":7866555,\n        \"hddRemainSize\":98792323232\n    },\n    \"modularExt\":{\n        \"ple\":\"588ea5a2b4fa8c29759e579d-V200.ple\",\n        \"modular\": [\n\t\t\t{\n\t\t\t\t\"name\":\"xxx\",\n\t\t\t\t\"sn\":\"xxx\",\n\t\t\t\t\"validTo\":\"xxx\",\n\t\t\t\t\"status\":false,\n\t\t\t\t\"mple\":\"xxx\"\n\t\t\t}\n        ]\n    },\n    \"content\":{\n        \"target\":\"3dzao\",\n        \"name\":\"fadsfasd\",\n        \"account\":\"dddd\"\n    }\n}",
-                    "type": "json"
-                }
-            ]
-        },
-        "success": {
-            "examples": [
-                {
-                    "title": "Success-Response",
-                    "content": " {\n\t\"result\":\"\",\n\t\"status\":\"success\"\n}",
-                    "type": "json"
-                }
-            ]
-        },
-        "error": {
-            "examples": [
-                {
-                    "title": "Error-Response",
-                    "content": " {\n\t\"result\":\"xxx\",\n\t\"status\":\"fail\"\n}",
-                    "type": "json"
-                }
-            ]
-        },
-        "version": "0.0.0",
-        "filename": "services/tracing.go",
-        "groupTitle": "tracing"
-    },
-    {
-        "type": "post",
-        "url": "/dtta?type=calibration",
-        "title": "标定使用记录跟踪",
-        "description": "<p>urlName: tracing  从进入到退出标定界面的一次记录</p>",
-        "group": "tracing",
-        "name": "tracingCalibration",
-        "header": {
-            "fields": {
-                "Header": [
-                    {
-                        "group": "Header",
-                        "type": "String",
-                        "optional": false,
-                        "field": "X-Auth-AppId",
-                        "description": "<p>Required 您的应用获取到的appid</p>"
-                    }
-                ]
-            }
-        },
-        "parameter": {
-            "fields": {
-                "Parameter": [
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": false,
-                        "field": "modelName",
-                        "description": "<p>软硬件名称，是在型号管理中约定的唯一名</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": true,
-                        "field": "serialNum",
-                        "description": "<p>设备序列号，与modularExt中的ple中必须要提供1个至少</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": true,
-                        "field": "installCode",
-                        "description": "<p>本次安装时生成的唯一码</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": true,
-                        "field": "usageCode",
-                        "description": "<p>本次启动时生成的唯一码</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": false,
-                        "field": "softwareName",
-                        "description": "<p>软件名称</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": false,
-                        "field": "softwareVer",
-                        "description": "<p>是在型号管理中约定的唯一名</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": false,
-                        "field": "tracingType",
-                        "description": "<p>采集类型</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "Bool",
-                        "optional": true,
-                        "field": "isOnline",
-                        "description": "<p>采集时是否联网,true/false</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": false,
-                        "field": "startOn",
-                        "description": "<p>采集开始时间</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": false,
-                        "field": "endOn",
-                        "description": "<p>采集结束时间</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "Object",
-                        "optional": false,
-                        "field": "osSoftExt",
-                        "description": "<p>系统扩展信息对象</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": false,
-                        "field": "osName",
-                        "description": "<p>系统名称</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": true,
-                        "field": "hostName",
-                        "description": "<p>主机名</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": true,
-                        "field": "osType",
-                        "description": "<p>操作系统类型</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": true,
-                        "field": "osVersion",
-                        "description": "<p>操作系统版本</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": true,
-                        "field": "lang",
-                        "description": "<p>系统语言，来自标准的https://www.science.co.il/language/Locale-codes.php，codePage值或是LCID String</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": false,
-                        "field": "resolution",
-                        "description": "<p>分辨率，以*分隔</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": true,
-                        "field": "installPath",
-                        "description": "<p>安装路径，指电脑本地路径</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "Object",
-                        "optional": true,
-                        "field": "browser",
-                        "description": "<p>默认浏览器信息对象</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": true,
-                        "field": "name",
-                        "description": "<p>默认浏览器名称</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": true,
-                        "field": "ver",
-                        "description": "<p>默认浏览器版本</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "Object",
-                        "optional": false,
-                        "field": "osHdExt",
-                        "description": "<p>硬件扩展信息对象</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "[]Object",
-                        "optional": false,
-                        "field": "cpu",
-                        "description": "<p>cpu对象</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "Integer",
-                        "optional": false,
-                        "field": "cpuCores",
-                        "description": "<p>cpu核数</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": false,
-                        "field": "cpuModel",
-                        "description": "<p>cpu型号</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": true,
-                        "field": "cpuVendor",
-                        "description": "<p>cpu品牌</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "[]Object",
-                        "optional": false,
-                        "field": "gpu",
-                        "description": "<p>gpu对象</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": false,
-                        "field": "gpuModel",
-                        "description": "<p>gpu型号</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "Integer",
-                        "optional": false,
-                        "field": "gpuMemSize",
-                        "description": "<p>gpu内存大小，单位是byte</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": true,
-                        "field": "gpuVendor",
-                        "description": "<p>gpu品牌</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "Integer",
-                        "optional": false,
-                        "field": "memSize",
-                        "description": "<p>内存大小，单位是byte</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "Integer",
-                        "optional": false,
-                        "field": "hddSize",
-                        "description": "<p>硬盘大小，单位是byte</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "Integer",
-                        "optional": false,
-                        "field": "hddRemainSize",
-                        "description": "<p>硬盘分区剩余大小，单位是byte</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "Object",
-                        "optional": true,
-                        "field": "modularExt",
-                        "description": "<p>配件或硬件扩展信息对象</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": true,
-                        "field": "ple",
-                        "description": "<p>加密串号</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "[]Object",
-                        "optional": true,
-                        "field": "modular",
-                        "description": "<p>模块对象</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": true,
-                        "field": "mple",
-                        "description": "<p>加密串号</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": true,
-                        "field": "sn",
-                        "description": "<p>序列号</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": true,
-                        "field": "validTo",
-                        "description": "<p>有效期截止时间</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "Bool",
-                        "optional": true,
-                        "field": "status",
-                        "description": "<p>状态，是启用还是禁用状态,true/false</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "[]Object",
-                        "optional": false,
-                        "field": "content",
-                        "description": "<p>采集内容</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": false,
-                        "field": "classsify",
-                        "description": "<p>标定类型</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": false,
-                        "field": "result",
-                        "description": "<p>该类标定结果</p>"
-                    }
-                ]
-            },
-            "examples": [
-                {
-                    "title": "Request-Example:",
-                    "content": "{\n    \"modelName\":\"afinia_3d_einscan_s\",\n    \"serialNum\":\"\",\n    \"installCode\":\"xxx\",\n    \"usageCode\":\"xxx\",\n    \"softwareName\":\"einscan\",\n    \"softwareVer\":\"2.7.0.5\",\n    \"tracingType\":\"calibration\",\n    \"isOnline\":true,\n    \"startOn\":\"2017-01-28T12:04:04Z\",\n    \"endOn\":\"2017-01-29T12:04:04Z\",\n    \"osSoftExt\":{\n        \"osName\":\"mac\",\n        \"hostName\":\"xxx\",\n        \"osType\":\"xxx\",\n        \"osVersion\":\"xxx\",\n        \"lang\":\"cn\",\n        \"resolution\":\"2478*1468\",\n        \"installPath\":\"afsdasd\",\n        \"browser\":{\n            \"name\":\"chrome\",\n            \"ver\":\"54.98\"\n        }\n    },\n    \"osHdExt\":{\n        \"cpu\":[{\n            \"cpuCores\":8,\n            \"cpuModel\":\"xeon\"\n        }],\n        \"memSize\":8096,\n        \"gpu\":[{\n            \"gpuModel\":\"intel hd4000\",\n            \"gpuMemSize\": 3900987777\n        }],\n        \"hddSize\":7866555,\n        \"hddRemainSize\":98792323232\n    },\n    \"modularExt\":{\n        \"ple\":\"588ea5a2b4fa8c29759e579d-V200.ple\",\n        \"modular\": [\n\t\t\t{\n\t\t\t\t\"name\":\"xxx\",\n\t\t\t\t\"sn\":\"xxx\",\n\t\t\t\t\"validTo\":\"xxx\",\n\t\t\t\t\"status\":false,\n\t\t\t\t\"mple\":\"xxx\"\n\t\t\t}\n        ]\n    },\n    \"content\":[{\n        \"classsify\":\"hd\",\n        \"modular\": [\n\t\t\t{\n\t\t\t\t\"name\":\"xxx\",\n\t\t\t\t\"sn\":\"xxx\",\n\t\t\t\t\"validTo\":\"xxx\",\n\t\t\t\t\"status\":false,\n\t\t\t\t\"mple\":\"xxx\"\n\t\t\t}\n        ],\n\t\t\"startOn\":\"2017-01-28T12:04:04Z\",\n\t\t\"endOn\":\"2017-01-29T12:04:04Z\",\n\t\t\"result\":\"success\"\n    }]\n}",
-                    "type": "json"
-                }
-            ]
-        },
-        "success": {
-            "examples": [
-                {
-                    "title": "Success-Response",
-                    "content": " {\n\t\"result\":\"\",\n\t\"status\":\"success\"\n}",
-                    "type": "json"
-                }
-            ]
-        },
-        "error": {
-            "examples": [
-                {
-                    "title": "Error-Response",
-                    "content": " {\n\t\"result\":\"xxx\",\n\t\"status\":\"fail\"\n}",
-                    "type": "json"
-                }
-            ]
-        },
-        "version": "0.0.0",
-        "filename": "services/tracing.go",
-        "groupTitle": "tracing"
-    },
-    {
-        "type": "post",
-        "url": "/dtta?type=dentalScan",
-        "title": "齿科扫描记录跟踪",
-        "description": "<p>urlName: tracing  齿科设备的一次扫描记录</p>",
-        "group": "tracing",
-        "name": "tracingDentalScan",
-        "header": {
-            "fields": {
-                "Header": [
-                    {
-                        "group": "Header",
-                        "type": "String",
-                        "optional": false,
-                        "field": "X-Auth-AppId",
-                        "description": "<p>Required 您的应用获取到的appid</p>"
-                    }
-                ]
-            }
-        },
-        "parameter": {
-            "fields": {
-                "Parameter": [
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": true,
-                        "field": "modelName",
-                        "description": "<p>软硬件名称，是在型号管理中约定的唯一名</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": true,
-                        "field": "serialNum",
-                        "description": "<p>设备序列号，与modularExt中的ple中必须要提供1个至少</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": true,
-                        "field": "installCode",
-                        "description": "<p>本次安装时生成的唯一码</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": true,
-                        "field": "usageCode",
-                        "description": "<p>本次启动时生成的唯一码</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": false,
-                        "field": "softwareName",
-                        "description": "<p>软件名称</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": false,
-                        "field": "softwareVer",
-                        "description": "<p>是在型号管理中约定的唯一名</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": false,
-                        "field": "tracingType",
-                        "description": "<p>采集类型</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "Bool",
-                        "optional": true,
-                        "field": "isOnline",
-                        "description": "<p>采集时是否联网,true/false</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": false,
-                        "field": "startOn",
-                        "description": "<p>采集开始时间</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": false,
-                        "field": "endOn",
-                        "description": "<p>采集结束时间</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "Object",
-                        "optional": false,
-                        "field": "osSoftExt",
-                        "description": "<p>系统扩展信息对象</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": false,
-                        "field": "osName",
-                        "description": "<p>系统名称</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": true,
-                        "field": "hostName",
-                        "description": "<p>主机名</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": true,
-                        "field": "osType",
-                        "description": "<p>操作系统类型</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": true,
-                        "field": "osVersion",
-                        "description": "<p>操作系统版本</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": true,
-                        "field": "lang",
-                        "description": "<p>系统语言，来自标准的https://www.science.co.il/language/Locale-codes.php，codePage值或是LCID String</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": false,
-                        "field": "resolution",
-                        "description": "<p>分辨率，以*分隔</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": true,
-                        "field": "installPath",
-                        "description": "<p>安装路径，指电脑本地路径</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "Object",
-                        "optional": true,
-                        "field": "browser",
-                        "description": "<p>默认浏览器信息对象</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": true,
-                        "field": "name",
-                        "description": "<p>默认浏览器名称</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": true,
-                        "field": "ver",
-                        "description": "<p>默认浏览器版本</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "Object",
-                        "optional": false,
-                        "field": "osHdExt",
-                        "description": "<p>硬件扩展信息对象</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "[]Object",
-                        "optional": false,
-                        "field": "cpu",
-                        "description": "<p>cpu对象</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "Integer",
-                        "optional": false,
-                        "field": "cpuCores",
-                        "description": "<p>cpu核数</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": false,
-                        "field": "cpuModel",
-                        "description": "<p>cpu型号</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": true,
-                        "field": "cpuVendor",
-                        "description": "<p>cpu品牌</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "[]Object",
-                        "optional": false,
-                        "field": "gpu",
-                        "description": "<p>gpu对象</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": false,
-                        "field": "gpuModel",
-                        "description": "<p>gpu型号</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "Integer",
-                        "optional": false,
-                        "field": "gpuMemSize",
-                        "description": "<p>gpu内存大小，单位是byte</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": true,
-                        "field": "gpuVendor",
-                        "description": "<p>gpu品牌</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "Integer",
-                        "optional": false,
-                        "field": "memSize",
-                        "description": "<p>内存大小，单位是byte</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "Integer",
-                        "optional": false,
-                        "field": "hddSize",
-                        "description": "<p>硬盘大小，单位是byte</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "Integer",
-                        "optional": false,
-                        "field": "hddRemainSize",
-                        "description": "<p>硬盘分区剩余大小，单位是byte</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "Object",
-                        "optional": true,
-                        "field": "modularExt",
-                        "description": "<p>配件或硬件扩展信息对象</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": true,
-                        "field": "ple",
-                        "description": "<p>加密串号</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "[]Object",
-                        "optional": true,
-                        "field": "modular",
-                        "description": "<p>模块对象</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": true,
-                        "field": "mple",
-                        "description": "<p>加密串号</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": true,
-                        "field": "sn",
-                        "description": "<p>序列号</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": true,
-                        "field": "validTo",
-                        "description": "<p>有效期截止时间</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "Bool",
-                        "optional": true,
-                        "field": "status",
-                        "description": "<p>状态，是启用还是禁用状态,true/false</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "[]Object",
-                        "optional": false,
-                        "field": "content",
-                        "description": "<p>采集内容</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": true,
-                        "field": "preparation",
-                        "description": ""
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": true,
-                        "field": "occlusionType",
-                        "description": ""
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": true,
-                        "field": "scanObjectType",
-                        "description": ""
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": true,
-                        "field": "callSourceType",
-                        "description": ""
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": true,
-                        "field": "dentalNotation",
-                        "description": ""
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": true,
-                        "field": "caseCreatedTime",
-                        "description": ""
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": true,
-                        "field": "gingivaScan",
-                        "description": ""
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": true,
-                        "field": "situScan",
-                        "description": ""
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": true,
-                        "field": "ortho",
-                        "description": ""
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": true,
-                        "field": "manualAlign",
-                        "description": ""
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": true,
-                        "field": "modelEdit",
-                        "description": ""
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": true,
-                        "field": "fillHole",
-                        "description": ""
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": true,
-                        "field": "rangeScan",
-                        "description": ""
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": true,
-                        "field": "mendScan",
-                        "description": ""
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": true,
-                        "field": "multiMendScan",
-                        "description": ""
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": true,
-                        "field": "gPURebuild",
-                        "description": ""
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": true,
-                        "field": "3Party",
-                        "description": ""
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": true,
-                        "field": "textureScan",
-                        "description": ""
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": true,
-                        "field": "refPoints",
-                        "description": ""
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": true,
-                        "field": "articulator",
-                        "description": ""
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": true,
-                        "field": "remoteScanMode",
-                        "description": ""
-                    }
-                ]
-            },
-            "examples": [
-                {
-                    "title": "Request-Example:",
-                    "content": "{\n    \"modelName\":\"afinia_3d_einscan_s\",\n    \"serialNum\":\"\",\n    \"installCode\":\"xxx\",\n    \"usageCode\":\"xxx\",\n    \"softwareName\":\"einscan\",\n    \"softwareVer\":\"2.7.0.5\",\n    \"tracingType\":\"dentalScan\",\n    \"isOnline\":true,\n    \"startOn\":\"2017-01-28T12:04:04Z\",\n    \"endOn\":\"2017-01-29T12:04:04Z\",\n    \"osSoftExt\":{\n        \"osName\":\"mac\",\n        \"hostName\":\"xxx\",\n        \"osType\":\"xxx\",\n        \"osVersion\":\"xxx\",\n        \"lang\":\"cn\",\n        \"resolution\":\"2478*1468\",\n        \"installPath\":\"afsdasd\",\n        \"browser\":{\n            \"name\":\"chrome\",\n            \"ver\":\"54.98\"\n        }\n    },\n    \"osHdExt\":{\n        \"cpu\":[{\n            \"cpuCores\":8,\n            \"cpuModel\":\"xeon\"\n        }],\n        \"memSize\":8096,\n        \"gpu\":[{\n            \"gpuModel\":\"intel hd4000\",\n            \"gpuMemSize\": 3900987777\n        }],\n        \"hddSize\":7866555,\n        \"hddRemainSize\":98792323232\n    },\n    \"modularExt\":{\n        \"ple\":\"588ea5a2b4fa8c29759e579d-V200.ple\",\n        \"modular\": [\n\t\t\t{\n\t\t\t\t\"name\":\"xxx\",\n\t\t\t\t\"sn\":\"xxx\",\n\t\t\t\t\"validTo\":\"xxx\",\n\t\t\t\t\"status\":false,\n\t\t\t\t\"mple\":\"xxx\"\n\t\t\t}\n        ]\n    },\n    \"content\":{\n        \"preparation\":\"Crown\",\n        \"occlusionType\":\"None\",\n        \"scanObjectType\":\"Die\",\n        \"callSourceType\":\"DentalScan\",\n        \"dentalNotation\":\"FDI\",\n        \"caseCreatedTime\":\"2018-05-28T13:04:04Z\",\n        \"gingivaScan\":\"true\",\n        \"situScan\":\"false\",\n        \"ortho\":\"true\",\n        \"manualAlign\":\"false\",\n        \"modelEdit\":\"true\",\n        \"fillHole\":\"false\",\n        \"rangeScan\":\"true\",\n        \"mendScan\":\"false\",\n        \"multiMendScan\":\"true\",\n        \"gPURebuild\":\"false\",\n        \"3Party\":\"true\",\n        \"textureScan\":\"false\",\n        \"refPoints\":\"true\",\n        \"articulator\":\"false\",\n        \"remoteScanMode\":\"true\"\n    }\n}",
-                    "type": "json"
-                }
-            ]
-        },
-        "success": {
-            "examples": [
-                {
-                    "title": "Success-Response",
-                    "content": " {\n\t\"result\":\"\",\n\t\"status\":\"success\"\n}",
-                    "type": "json"
-                }
-            ]
-        },
-        "error": {
-            "examples": [
-                {
-                    "title": "Error-Response",
-                    "content": " {\n\t\"result\":\"xxx\",\n\t\"status\":\"fail\"\n}",
-                    "type": "json"
-                }
-            ]
-        },
-        "version": "0.0.0",
-        "filename": "services/tracing.go",
-        "groupTitle": "tracing"
-    },
-    {
-        "type": "post",
-        "url": "/dtta?type=feedback",
-        "title": "软硬件反馈记录跟踪",
-        "description": "<p>urlName: tracing  软硬件反馈记录，会生成一个工单</p>",
-        "group": "tracing",
-        "name": "tracingFeedback",
-        "header": {
-            "fields": {
-                "Header": [
-                    {
-                        "group": "Header",
-                        "type": "String",
-                        "optional": false,
-                        "field": "X-Auth-AppId",
-                        "description": "<p>Required 您的应用获取到的appid</p>"
-                    }
-                ]
-            }
-        },
-        "parameter": {
-            "fields": {
-                "Parameter": [
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": true,
-                        "field": "modelName",
-                        "description": "<p>软硬件名称，是在型号管理中约定的唯一名</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": true,
-                        "field": "serialNum",
-                        "description": "<p>设备序列号</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": true,
-                        "field": "installCode",
-                        "description": "<p>本次安装时生成的唯一码</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": true,
-                        "field": "usageCode",
-                        "description": "<p>本次启动时生成的唯一码</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": false,
-                        "field": "softwareName",
-                        "description": "<p>软件名称</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": false,
-                        "field": "softwareVer",
-                        "description": "<p>是在型号管理中约定的唯一名</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": false,
-                        "field": "tracingType",
-                        "description": "<p>采集类型</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "Bool",
-                        "optional": true,
-                        "field": "isOnline",
-                        "description": "<p>采集时是否联网,true/false</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": false,
-                        "field": "startOn",
-                        "description": "<p>采集开始时间</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": false,
-                        "field": "endOn",
-                        "description": "<p>采集结束时间</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "Object",
-                        "optional": false,
-                        "field": "osSoftExt",
-                        "description": "<p>系统扩展信息对象</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": false,
-                        "field": "osName",
-                        "description": "<p>系统名称</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": true,
-                        "field": "hostName",
-                        "description": "<p>主机名</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": true,
-                        "field": "osType",
-                        "description": "<p>操作系统类型</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": true,
-                        "field": "osVersion",
-                        "description": "<p>操作系统版本</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": true,
-                        "field": "lang",
-                        "description": "<p>系统语言，来自标准的https://www.science.co.il/language/Locale-codes.php，codePage值或是LCID String</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": false,
-                        "field": "resolution",
-                        "description": "<p>分辨率，以*分隔</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": true,
-                        "field": "installPath",
-                        "description": "<p>安装路径，指电脑本地路径</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "Object",
-                        "optional": true,
-                        "field": "browser",
-                        "description": "<p>默认浏览器信息对象</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": true,
-                        "field": "name",
-                        "description": "<p>默认浏览器名称</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": true,
-                        "field": "ver",
-                        "description": "<p>默认浏览器版本</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "Object",
-                        "optional": false,
-                        "field": "osHdExt",
-                        "description": "<p>硬件扩展信息对象</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "[]Object",
-                        "optional": false,
-                        "field": "cpu",
-                        "description": "<p>cpu对象</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "Integer",
-                        "optional": false,
-                        "field": "cpuCores",
-                        "description": "<p>cpu核数</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": false,
-                        "field": "cpuModel",
-                        "description": "<p>cpu型号</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": true,
-                        "field": "cpuVendor",
-                        "description": "<p>cpu品牌</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "[]Object",
-                        "optional": false,
-                        "field": "gpu",
-                        "description": "<p>gpu对象</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": false,
-                        "field": "gpuModel",
-                        "description": "<p>gpu型号</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "Integer",
-                        "optional": false,
-                        "field": "gpuMemSize",
-                        "description": "<p>gpu内存大小，单位是byte</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": true,
-                        "field": "gpuVendor",
-                        "description": "<p>gpu品牌</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "Integer",
-                        "optional": false,
-                        "field": "memSize",
-                        "description": "<p>内存大小，单位是byte</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "Integer",
-                        "optional": false,
-                        "field": "hddSize",
-                        "description": "<p>硬盘大小，单位是byte</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "Integer",
                         "optional": false,
-                        "field": "hddRemainSize",
-                        "description": "<p>硬盘分区剩余大小，单位是byte</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "Object",
-                        "optional": true,
-                        "field": "modularExt",
-                        "description": "<p>配件或硬件扩展信息对象</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": true,
-                        "field": "ple",
-                        "description": "<p>加密串号</p>"
+                        "field": "company",
+                        "description": "<p>公司</p>"
                     },
                     {
                         "group": "Parameter",
-                        "type": "[]Object",
-                        "optional": true,
-                        "field": "modular",
-                        "description": "<p>模块对象</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": true,
-                        "field": "mple",
-                        "description": "<p>加密串号</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": true,
-                        "field": "sn",
-                        "description": "<p>序列号</p>"
-                    },
-                    {
-                        "group": "Parameter",
                         "type": "String",
-                        "optional": true,
-                        "field": "validTo",
-                        "description": "<p>有效期截止时间</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "Bool",
-                        "optional": true,
-                        "field": "status",
-                        "description": "<p>状态，是启用还是禁用状态,true/false</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "Object",
                         "optional": false,
-                        "field": "content",
-                        "description": "<p>采集内容</p>"
+                        "field": "telephone",
+                        "description": "<p>电话</p>"
                     },
                     {
                         "group": "Parameter",
@@ -5495,22 +532,29 @@ apiInfo = [
                         "group": "Parameter",
                         "type": "String",
                         "optional": false,
+                        "field": "country",
+                        "description": "<p>国家</p>"
+                    },
+                    {
+                        "group": "Parameter",
+                        "type": "String",
+                        "optional": false,
+                        "field": "addr",
+                        "description": "<p>地址</p>"
+                    },
+                    {
+                        "group": "Parameter",
+                        "type": "String",
+                        "optional": false,
                         "field": "industry",
                         "description": "<p>行业</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "[]String",
-                        "optional": true,
-                        "field": "attachs",
-                        "description": "<p>附件</p>"
                     }
                 ]
             },
             "examples": [
                 {
                     "title": "Request-Example:",
-                    "content": "{\n    \"modelName\":\"afinia_3d_einscan_s\",\n    \"serialNum\":\"\",\n    \"installCode\":\"xxx\",\n    \"usageCode\":\"xxx\",\n    \"softwareName\":\"einscan\",\n    \"softwareVer\":\"2.7.0.5\",\n    \"tracingType\":\"feedback\",\n    \"isOnline\":true,\n    \"startOn\":\"2017-01-28T12:04:04Z\",\n    \"endOn\":\"2017-01-29T12:04:04Z\",\n    \"osSoftExt\":{\n        \"osName\":\"mac\",\n        \"hostName\":\"xxx\",\n        \"osType\":\"xxx\",\n        \"osVersion\":\"xxx\",\n        \"lang\":\"cn\",\n        \"resolution\":\"2478*1468\",\n        \"installPath\":\"afsdasd\",\n        \"browser\":{\n            \"name\":\"chrome\",\n            \"ver\":\"54.98\"\n        }\n    },\n    \"osHdExt\":{\n        \"cpu\":[{\n            \"cpuCores\":8,\n            \"cpuModel\":\"xeon\"\n        }],\n        \"memSize\":8096,\n        \"gpu\":[{\n            \"gpuModel\":\"intel hd4000\",\n            \"gpuMemSize\": 3900987777\n        }],\n        \"hddSize\":7866555,\n        \"hddRemainSize\":98792323232\n    },\n    \"modularExt\":{\n        \"ple\":\"588ea5a2b4fa8c29759e579d-V200.ple\",\n        \"modular\": [\n\t\t\t{\n\t\t\t\t\"name\":\"xxx\",\n\t\t\t\t\"sn\":\"xxx\",\n\t\t\t\t\"validTo\":\"xxx\",\n\t\t\t\t\"status\":false,\n\t\t\t\t\"mple\":\"xxx\"\n\t\t\t}\n        ]\n    },\n    \"content\":{\n        \"email\":\"\",\n        \"attachs\":[\"xxx\"],\n        \"content\":\"\",\n        \"industry\":\"\"\n    }\n}",
+                    "content": "{\n\t\"modelCode\": \"xxxx\",\n\t\"fingerprint\":\"xxx\",\n\t\"deviceModelCode\": \"xxxx\",\n\t\"deviceSN\": \"xxxx\",\n\t\"industry\":\"xxx\",\n\t\"addr\":\"xxx\",\n\t\"country\":\"xxx\",\n\t\"email\":\"xxx\",\n\t\"telephone\":\"xxx\",\n\t\"company\":\"xxx\",\n\t\"name\":\"xxx\"\n}",
                     "type": "json"
                 }
             ]
@@ -5519,31 +563,47 @@ apiInfo = [
             "examples": [
                 {
                     "title": "Success-Response",
-                    "content": " {\n\t\"result\":\"\",\n\t\"status\":\"success\"\n}",
+                    "content": "{\n    \"status\": \"success\",\n    \"result\": \"\"\n}",
                     "type": "json"
                 }
             ]
         },
         "error": {
+            "fields": {
+                "Error 4xx": [
+                    {
+                        "group": "Error 4xx",
+                        "optional": false,
+                        "field": "serverErr",
+                        "description": "<p>表示服务器错误，挂在fingerPrint字段下，需要客户端稍候重试，或是待服务端改正错误后再试</p>"
+                    },
+                    {
+                        "group": "Error 4xx",
+                        "optional": false,
+                        "field": "illegal",
+                        "description": "<p>表示非法，挂在fingerPrint字段下，试用已经结束，提示用户去激活</p>"
+                    }
+                ]
+            },
             "examples": [
                 {
-                    "title": "Error-Response",
-                    "content": " {\n\t\"result\":\"xxx\",\n\t\"status\":\"fail\"\n}",
+                    "title": "Error-Response:",
+                    "content": "{\n    \"status\": \"fail\",\n    \"result\": \"{\\\"fingerPrint\\\":\\\"illegal\\\"}\"\n    }\n}",
                     "type": "json"
                 }
             ]
         },
         "version": "0.0.0",
-        "filename": "services/tracing.go",
-        "groupTitle": "tracing"
+        "filename": "services/ed.go",
+        "groupTitle": "EncryptDecrypt"
     },
     {
         "type": "post",
-        "url": "/dtta?type=upgrade",
-        "title": "升级记录跟踪",
-        "description": "<p>urlName: upgrade  升级记录跟踪</p>",
-        "group": "tracing",
-        "name": "upgradeTracing",
+        "url": "/ed/trail",
+        "title": "3加解密授权试用期状态查询接口",
+        "description": "<p>urlName: trailED 集成方在启动时如果还没有激活码时调用： \\</p> <ol> <li>返回该fingerprint的首次试用登记时间、试用状态和试用剩余时间、是否已激活、首次激活时间； \\</li> <li>集成方如果收到已激活的信息，应该调用后面的激活状态查询接口获取更多信息； \\</li> <li>如果不是上述的值，则返回请求格式错误(http的statusCode是400)或者是未知错误(unknown) <br> 需要保存第1次的请求时间和每次的请求时间，用于判断试用时间</li> </ol>",
+        "group": "EncryptDecrypt",
+        "name": "trailED",
         "header": {
             "fields": {
                 "Header": [
@@ -5563,322 +623,181 @@ apiInfo = [
                     {
                         "group": "Parameter",
                         "type": "String",
-                        "optional": true,
-                        "field": "modelName",
-                        "description": "<p>软硬件名称，是在型号管理中约定的唯一名</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": true,
-                        "field": "serialNum",
-                        "description": "<p>设备序列号</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": true,
-                        "field": "installCode",
-                        "description": "<p>本次安装时生成的唯一码</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": true,
-                        "field": "usageCode",
-                        "description": "<p>本次启动时生成的唯一码</p>"
+                        "optional": false,
+                        "field": "modelCode",
+                        "description": "<p>约定的唯一型号名，比如solidEdge，一般是集成软件的约定名称或是产品线指定的设备唯一型号名</p>"
                     },
                     {
                         "group": "Parameter",
                         "type": "String",
                         "optional": false,
-                        "field": "softwareName",
-                        "description": "<p>软件名称</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": false,
-                        "field": "softwareVer",
-                        "description": "<p>是在型号管理中约定的唯一名</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": false,
-                        "field": "tracingType",
-                        "description": "<p>采集类型</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "Bool",
-                        "optional": true,
-                        "field": "isOnline",
-                        "description": "<p>采集时是否联网,true/false</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": false,
-                        "field": "startOn",
-                        "description": "<p>采集开始时间</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "Object",
-                        "optional": false,
-                        "field": "osSoftExt",
-                        "description": "<p>系统扩展信息对象</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": false,
-                        "field": "osName",
-                        "description": "<p>系统名称</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": true,
-                        "field": "hostName",
-                        "description": "<p>主机名</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": true,
-                        "field": "osType",
-                        "description": "<p>操作系统类型</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": true,
-                        "field": "osVersion",
-                        "description": "<p>操作系统版本</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": true,
-                        "field": "lang",
-                        "description": "<p>系统语言，来自标准的https://www.science.co.il/language/Locale-codes.php，codePage值或是LCID String</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": false,
-                        "field": "resolution",
-                        "description": "<p>分辨率，以*分隔</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": true,
-                        "field": "installPath",
-                        "description": "<p>安装路径，指电脑本地路径</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "Object",
-                        "optional": true,
-                        "field": "browser",
-                        "description": "<p>默认浏览器信息对象</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": true,
-                        "field": "name",
-                        "description": "<p>默认浏览器名称</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": true,
-                        "field": "ver",
-                        "description": "<p>默认浏览器版本</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "Object",
-                        "optional": false,
-                        "field": "osHdExt",
-                        "description": "<p>硬件扩展信息对象</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "[]Object",
-                        "optional": false,
-                        "field": "cpu",
-                        "description": "<p>cpu对象</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "Integer",
-                        "optional": false,
-                        "field": "cpuCores",
-                        "description": "<p>cpu核数</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": false,
-                        "field": "cpuModel",
-                        "description": "<p>cpu型号</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": true,
-                        "field": "cpuVendor",
-                        "description": "<p>cpu品牌</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "[]Object",
-                        "optional": false,
-                        "field": "gpu",
-                        "description": "<p>gpu对象</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": false,
-                        "field": "gpuModel",
-                        "description": "<p>gpu型号</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "Integer",
-                        "optional": false,
-                        "field": "gpuMemSize",
-                        "description": "<p>gpu内存大小，单位是byte</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": true,
-                        "field": "gpuVendor",
-                        "description": "<p>gpu品牌</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "Integer",
-                        "optional": false,
-                        "field": "memSize",
-                        "description": "<p>内存大小，单位是byte</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "Integer",
-                        "optional": false,
-                        "field": "hddSize",
-                        "description": "<p>硬盘大小，单位是byte</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "Integer",
-                        "optional": false,
-                        "field": "hddRemainSize",
-                        "description": "<p>硬盘分区剩余大小，单位是byte</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "Object",
-                        "optional": true,
-                        "field": "modularExt",
-                        "description": "<p>配件或硬件扩展信息对象</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": true,
-                        "field": "ple",
-                        "description": "<p>加密串号</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "[]Object",
-                        "optional": true,
-                        "field": "modular",
-                        "description": "<p>模块对象</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": true,
-                        "field": "mple",
-                        "description": "<p>加密串号</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": true,
-                        "field": "sn",
-                        "description": "<p>序列号</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": true,
-                        "field": "validTo",
-                        "description": "<p>有效期截止时间</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "Bool",
-                        "optional": true,
-                        "field": "status",
-                        "description": "<p>状态，是启用还是禁用状态,true/false</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": false,
-                        "field": "content",
-                        "description": "<p>采集内容，升级的版本</p>"
+                        "field": "fingerprint",
+                        "description": "<p>SolidEdge运行电脑或是设备的指纹</p>"
                     }
                 ]
             },
             "examples": [
                 {
                     "title": "Request-Example:",
-                    "content": "{\n    \"modelName\":\"afinia_3d_einscan_s\",\n    \"serialNum\":\"\",\n    \"installCode\":\"xxx\",\n    \"usageCode\":\"xxx\",\n    \"softwareName\":\"einscan\",\n    \"softwareVer\":\"2.7.0.5\",\n    \"tracingType\":\"aliUpgrade\",\n    \"isOnline\":true,\n    \"startOn\":\"2017-01-28T12:04:04Z\",\n    \"osSoftExt\":{\n        \"osName\":\"mac\",\n        \"hostName\":\"xxx\",\n        \"osType\":\"xxx\",\n        \"osVersion\":\"xxx\",\n        \"lang\":\"cn\",\n        \"resolution\":\"2478*1468\",\n        \"installPath\":\"afsdasd\",\n        \"browser\":{\n            \"name\":\"chrome\",\n            \"ver\":\"54.98\"\n        }\n    },\n    \"osHdExt\":{\n        \"cpu\":[{\n            \"cpuCores\":8,\n            \"cpuModel\":\"xeon\"\n        }],\n        \"memSize\":8096,\n        \"gpu\":[{\n            \"gpuModel\":\"intel hd4000\",\n            \"gpuMemSize\": 3900987777\n        }],\n        \"hddSize\":7866555,\n        \"hddRemainSize\":98792323232\n    },\n    \"modularExt\":{\n        \"ple\":\"588ea5a2b4fa8c29759e579d-V200.ple\",\n        \"modular\": [\n\t\t\t{\n\t\t\t\t\"name\":\"xxx\",\n\t\t\t\t\"sn\":\"xxx\",\n\t\t\t\t\"validTo\":\"xxx\",\n\t\t\t\t\"status\":false,\n\t\t\t\t\"mple\":\"xxx\"\n\t\t\t}\n        ]\n    },\n    \"content\":\"\"\n}",
+                    "content": "{\n\t\"modelCode\": \"xxxx\",\n\t\"fingerprint\":\"xxx\"\n}",
                     "type": "json"
                 }
             ]
         },
         "success": {
+            "fields": {
+                "Success 200": [
+                    {
+                        "group": "Success 200",
+                        "type": "String",
+                        "optional": false,
+                        "field": "createAt",
+                        "description": "<p>第1次试用开始时间</p>"
+                    },
+                    {
+                        "group": "Success 200",
+                        "type": "Float",
+                        "optional": false,
+                        "field": "surplusDays",
+                        "description": "<p>剩余有效天数</p>"
+                    },
+                    {
+                        "group": "Success 200",
+                        "type": "String",
+                        "optional": false,
+                        "field": "modelCode",
+                        "description": "<p>约定的唯一型号名，比如solidEdge，一般是集成软件的约定名称或是产品线指定的设备唯一型号名</p>"
+                    },
+                    {
+                        "group": "Success 200",
+                        "type": "String",
+                        "optional": true,
+                        "field": "sn",
+                        "description": "<p>SolidEdge的激活码或是设备序列号</p>"
+                    },
+                    {
+                        "group": "Success 200",
+                        "type": "String",
+                        "optional": false,
+                        "field": "fingerprint",
+                        "description": "<p>SolidEdge运行电脑或是设备的指纹</p>"
+                    },
+                    {
+                        "group": "Success 200",
+                        "type": "String",
+                        "optional": true,
+                        "field": "actived",
+                        "description": "<p>是否有激活记录，正常在试用期是不应该有的，否则表示此用户已经重装</p>"
+                    },
+                    {
+                        "group": "Success 200",
+                        "type": "String",
+                        "optional": true,
+                        "field": "deviceModelCode",
+                        "description": "<p>约定的设备唯一型号名，比如einscan</p>"
+                    },
+                    {
+                        "group": "Success 200",
+                        "type": "String",
+                        "optional": true,
+                        "field": "deviceSN",
+                        "description": "<p>设备序列号</p>"
+                    },
+                    {
+                        "group": "Success 200",
+                        "type": "String",
+                        "optional": true,
+                        "field": "name",
+                        "description": "<p>姓名</p>"
+                    },
+                    {
+                        "group": "Success 200",
+                        "type": "String",
+                        "optional": true,
+                        "field": "company",
+                        "description": "<p>公司</p>"
+                    },
+                    {
+                        "group": "Success 200",
+                        "type": "String",
+                        "optional": true,
+                        "field": "telephone",
+                        "description": "<p>电话</p>"
+                    },
+                    {
+                        "group": "Success 200",
+                        "type": "String",
+                        "optional": true,
+                        "field": "email",
+                        "description": "<p>邮箱</p>"
+                    },
+                    {
+                        "group": "Success 200",
+                        "type": "String",
+                        "optional": true,
+                        "field": "country",
+                        "description": "<p>国家</p>"
+                    },
+                    {
+                        "group": "Success 200",
+                        "type": "String",
+                        "optional": true,
+                        "field": "addr",
+                        "description": "<p>地址</p>"
+                    },
+                    {
+                        "group": "Success 200",
+                        "type": "String",
+                        "optional": true,
+                        "field": "industry",
+                        "description": "<p>行业</p>"
+                    }
+                ]
+            },
             "examples": [
                 {
                     "title": "Success-Response",
-                    "content": " {\n\t\"result\":\"\",\n\t\"status\":\"success\"\n}",
+                    "content": "{\n    \"status\": \"success\",\n    \"result\": {\n\t\t\"modelCode\": \"xxxx\",\n\t\t\"fingerprint\":\"xxx\",\n\t\t\"actived\":false,\n\t\t\"createAt\":\"xxx\",\n\t\t\"sn\":\"xxx\",\n\t\t\"surplusDays\":0.00,\n\t\t\"deviceModelCode\": \"xxxx\",\n\t\t\"deviceSN\": \"xxxx\",\n\t\t\"industry\":\"xxx\",\n\t\t\"addr\":\"xxx\",\n\t\t\"country\":\"xxx\",\n\t\t\"email\":\"xxx\",\n\t\t\"telephone\":\"xxx\",\n\t\t\"company\":\"xxx\",\n\t\t\"name\":\"xxx\"\n\t}\n}",
                     "type": "json"
                 }
             ]
         },
         "error": {
+            "fields": {
+                "Error 4xx": [
+                    {
+                        "group": "Error 4xx",
+                        "optional": false,
+                        "field": "serverErr",
+                        "description": "<p>表示服务器错误，挂在fingerPrint字段下，需要客户端稍候重试，或是待服务端改正错误后再试</p>"
+                    },
+                    {
+                        "group": "Error 4xx",
+                        "optional": false,
+                        "field": "unknown",
+                        "description": "<p>表示未知错误，挂在fingerPrint字段下，需要客户端稍候重试，或是待服务端改正错误后再试</p>"
+                    }
+                ]
+            },
             "examples": [
                 {
-                    "title": "Error-Response",
-                    "content": " {\n\t\"result\":\"xxx\",\n\t\"status\":\"fail\"\n}",
+                    "title": "Error-Response:",
+                    "content": "{\n    \"status\": \"fail\",\n    \"result\": \"{\\\"fingerprint\\\":\\\"notExist\\\"}\"\n    }\n}",
                     "type": "json"
                 }
             ]
         },
         "version": "0.0.0",
-        "filename": "services/tracing.go",
-        "groupTitle": "tracing"
+        "filename": "services/ed.go",
+        "groupTitle": "EncryptDecrypt"
     },
     {
         "type": "post",
-        "url": "/dtta?type=usage",
-        "title": "软硬件使用记录跟踪",
-        "description": "<p>urlName: tracing  软硬件从启动到关闭的一次记录</p>",
-        "group": "tracing",
-        "name": "usageTracing",
+        "url": "/ed/version",
+        "title": "2加解密授权版本信息反馈接口",
+        "description": "<p>urlName: versionED 集成方在可以获取运行版本信息时反馈： <br> 需要保存第1次的请求时间和每次的请求时间，用于判断版本记录</p>",
+        "group": "EncryptDecrypt",
+        "name": "versionED",
         "header": {
             "fields": {
                 "Header": [
@@ -5898,303 +817,51 @@ apiInfo = [
                     {
                         "group": "Parameter",
                         "type": "String",
-                        "optional": true,
-                        "field": "modelName",
-                        "description": "<p>软硬件名称，是在型号管理中约定的唯一名</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": true,
-                        "field": "serialNum",
-                        "description": "<p>设备序列号</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": true,
-                        "field": "installCode",
-                        "description": "<p>本次安装时生成的唯一码</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": true,
-                        "field": "usageCode",
-                        "description": "<p>本次启动时生成的唯一码</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
                         "optional": false,
-                        "field": "softwareName",
-                        "description": "<p>软件名称</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": false,
-                        "field": "softwareVer",
-                        "description": "<p>是在型号管理中约定的唯一名</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": false,
-                        "field": "tracingType",
-                        "description": "<p>采集类型</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "Bool",
-                        "optional": true,
-                        "field": "isOnline",
-                        "description": "<p>采集时是否联网,true/false</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": false,
-                        "field": "startOn",
-                        "description": "<p>采集开始时间</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": false,
-                        "field": "endOn",
-                        "description": "<p>采集结束时间</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "Object",
-                        "optional": false,
-                        "field": "osSoftExt",
-                        "description": "<p>系统扩展信息对象</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": false,
-                        "field": "osName",
-                        "description": "<p>系统名称</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": true,
-                        "field": "hostName",
-                        "description": "<p>主机名</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": true,
-                        "field": "osType",
-                        "description": "<p>操作系统类型</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": true,
-                        "field": "osVersion",
-                        "description": "<p>操作系统版本</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": true,
-                        "field": "lang",
-                        "description": "<p>系统语言，来自标准的https://www.science.co.il/language/Locale-codes.php，codePage值或是LCID String</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": false,
-                        "field": "resolution",
-                        "description": "<p>分辨率，以*分隔</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": true,
-                        "field": "installPath",
-                        "description": "<p>安装路径，指电脑本地路径</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "Object",
-                        "optional": true,
-                        "field": "browser",
-                        "description": "<p>默认浏览器信息对象</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": true,
-                        "field": "name",
-                        "description": "<p>默认浏览器名称</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": true,
-                        "field": "ver",
-                        "description": "<p>默认浏览器版本</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "Object",
-                        "optional": false,
-                        "field": "osHdExt",
-                        "description": "<p>硬件扩展信息对象</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "[]Object",
-                        "optional": false,
-                        "field": "cpu",
-                        "description": "<p>cpu对象</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "Integer",
-                        "optional": false,
-                        "field": "cpuCores",
-                        "description": "<p>cpu核数</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": false,
-                        "field": "cpuModel",
-                        "description": "<p>cpu型号</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": true,
-                        "field": "cpuVendor",
-                        "description": "<p>cpu品牌</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "[]Object",
-                        "optional": false,
-                        "field": "gpu",
-                        "description": "<p>gpu对象</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": false,
-                        "field": "gpuModel",
-                        "description": "<p>gpu型号</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "Integer",
-                        "optional": false,
-                        "field": "gpuMemSize",
-                        "description": "<p>gpu内存大小，单位是byte</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": true,
-                        "field": "gpuVendor",
-                        "description": "<p>gpu品牌</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "Integer",
-                        "optional": false,
-                        "field": "memSize",
-                        "description": "<p>内存大小，单位是byte</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "Integer",
-                        "optional": false,
-                        "field": "hddSize",
-                        "description": "<p>硬盘大小，单位是byte</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "Integer",
-                        "optional": false,
-                        "field": "hddRemainSize",
-                        "description": "<p>硬盘分区剩余大小，单位是byte</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "Object",
-                        "optional": true,
-                        "field": "modularExt",
-                        "description": "<p>配件或硬件扩展信息对象</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": true,
-                        "field": "ple",
-                        "description": "<p>加密串号</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "[]Object",
-                        "optional": true,
-                        "field": "modular",
-                        "description": "<p>模块对象</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": true,
-                        "field": "mple",
-                        "description": "<p>加密串号</p>"
+                        "field": "modelCode",
+                        "description": "<p>约定的唯一型号名，比如solidEdge，一般是集成软件的约定名称或是产品线指定的设备唯一型号名</p>"
                     },
                     {
                         "group": "Parameter",
                         "type": "String",
                         "optional": true,
                         "field": "sn",
-                        "description": "<p>序列号</p>"
+                        "description": "<p>SolidEdge的激活码或是设备序列号</p>"
+                    },
+                    {
+                        "group": "Parameter",
+                        "type": "String",
+                        "optional": false,
+                        "field": "fingerprint",
+                        "description": "<p>SolidEdge运行电脑或是设备的指纹</p>"
+                    },
+                    {
+                        "group": "Parameter",
+                        "type": "String",
+                        "optional": false,
+                        "field": "version",
+                        "description": "<p>SolidEdge运行电脑或是设备的指纹</p>"
+                    },
+                    {
+                        "group": "Parameter",
+                        "type": "String",
+                        "optional": false,
+                        "field": "currentVersion",
+                        "description": "<p>加解密集成方的版本信息，用于追溯问题</p>"
                     },
                     {
                         "group": "Parameter",
                         "type": "String",
                         "optional": true,
-                        "field": "validTo",
-                        "description": "<p>有效期截止时间</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "Bool",
-                        "optional": true,
-                        "field": "status",
-                        "description": "<p>状态，是启用还是禁用状态,true/false</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "Object",
-                        "optional": true,
-                        "field": "content",
-                        "description": "<p>采集内容</p>"
-                    },
-                    {
-                        "group": "Parameter",
-                        "type": "String",
-                        "optional": true,
-                        "field": "enableGuide",
-                        "description": "<p>是否启用了引导</p>"
+                        "field": "data",
+                        "description": "<p>调用库生成的解密内容</p>"
                     }
                 ]
             },
             "examples": [
                 {
                     "title": "Request-Example:",
-                    "content": "{\n    \"modelName\":\"afinia_3d_einscan_s\",\n    \"serialNum\":\"\",\n    \"installCode\":\"xxx\",\n    \"usageCode\":\"xxx\",\n    \"softwareName\":\"einscan\",\n    \"softwareVer\":\"2.7.0.5\",\n    \"tracingType\":\"usage\",\n    \"isOnline\":true,\n    \"startOn\":\"2017-01-28T12:04:04Z\",\n    \"endOn\":\"2017-01-29T12:04:04Z\",\n    \"osSoftExt\":{\n        \"osName\":\"mac\",\n        \"hostName\":\"xxx\",\n        \"osType\":\"xxx\",\n        \"osVersion\":\"xxx\",\n        \"lang\":\"cn\",\n        \"resolution\":\"2478*1468\",\n        \"installPath\":\"afsdasd\",\n        \"browser\":{\n            \"name\":\"chrome\",\n            \"ver\":\"54.98\"\n        }\n    },\n    \"osHdExt\":{\n        \"cpu\":[{\n            \"cpuCores\":8,\n            \"cpuModel\":\"xeon\"\n        }],\n        \"memSize\":8096,\n        \"gpu\":[{\n            \"gpuModel\":\"intel hd4000\",\n            \"gpuMemSize\": 3900987777\n        }],\n        \"hddSize\":7866555,\n        \"hddRemainSize\":98792323232\n    },\n    \"modularExt\":{\n        \"ple\":\"588ea5a2b4fa8c29759e579d-V200.ple\",\n        \"modular\": [\n\t\t\t{\n\t\t\t\t\"name\":\"xxx\",\n\t\t\t\t\"sn\":\"xxx\",\n\t\t\t\t\"validTo\":\"xxx\",\n\t\t\t\t\"status\":false,\n\t\t\t\t\"mple\":\"xxx\"\n\t\t\t}\n        ]\n    },\n    \"content\":{\n        \"enableGuide\":\"\"\n    }\n}",
+                    "content": "{\n\t\"modelCode\": \"xxxx\",\n\t\"sn\": \"xxxx\",\n\t\"fingerprint\":\"xxx\",\n\t\"version\":\"xxx\",\n\t\"currentVersion\":\"xxx\",\n\t\"data\":\"xxx\"\n}",
                     "type": "json"
                 }
             ]
@@ -6203,23 +870,144 @@ apiInfo = [
             "examples": [
                 {
                     "title": "Success-Response",
-                    "content": " {\n\t\"result\":\"\",\n\t\"status\":\"success\"\n}",
+                    "content": "{\n    \"status\": \"success\",\n    \"result\": \"\"\n}",
                     "type": "json"
                 }
             ]
         },
         "error": {
+            "fields": {
+                "Error 4xx": [
+                    {
+                        "group": "Error 4xx",
+                        "optional": false,
+                        "field": "serverErr",
+                        "description": "<p>表示服务器错误，挂在FingerPrint字段下，需要客户端稍候重试，或是待服务端改正错误后再试</p>"
+                    },
+                    {
+                        "group": "Error 4xx",
+                        "optional": false,
+                        "field": "unknown",
+                        "description": "<p>表示未知错误，挂在FingerPrint字段下，需要客户端稍候重试，或是待服务端改正错误后再试</p>"
+                    }
+                ]
+            },
             "examples": [
                 {
-                    "title": "Error-Response",
-                    "content": " {\n\t\"result\":\"xxx\",\n\t\"status\":\"fail\"\n}",
+                    "title": "Error-Response:",
+                    "content": "{\n    \"status\": \"fail\",\n    \"result\": \"{\\\"fingerPrint\\\":\\\"serverErr\\\"}\"\n    }\n}",
                     "type": "json"
                 }
             ]
         },
         "version": "0.0.0",
-        "filename": "services/tracing.go",
-        "groupTitle": "tracing"
+        "filename": "services/ed.go",
+        "groupTitle": "EncryptDecrypt"
+    },
+    {
+        "type": "post",
+        "url": "/ed/withdraw",
+        "title": "7加解密授权注销接口",
+        "description": "<p>urlName: withdrawED 必须是已经激活状态, 序列号、fingerprint对上，才能申请提交成功；字段错误，服务器错误(serverErr)则稍候再试，其它返回非法(illegal)，提示用户</p>",
+        "group": "EncryptDecrypt",
+        "name": "withdrawED",
+        "header": {
+            "fields": {
+                "Header": [
+                    {
+                        "group": "Header",
+                        "type": "String",
+                        "optional": false,
+                        "field": "X-Auth-AppId",
+                        "description": "<p>Required 您的应用获取到的appid</p>"
+                    }
+                ]
+            }
+        },
+        "parameter": {
+            "fields": {
+                "Parameter": [
+                    {
+                        "group": "Parameter",
+                        "type": "String",
+                        "optional": false,
+                        "field": "modelCode",
+                        "description": "<p>约定的唯一型号名，比如solidEdge，一般是集成软件的约定名称或是产品线指定的设备唯一型号名</p>"
+                    },
+                    {
+                        "group": "Parameter",
+                        "type": "String",
+                        "optional": false,
+                        "field": "sn",
+                        "description": "<p>SolidEdge的激活码或是设备序列号</p>"
+                    },
+                    {
+                        "group": "Parameter",
+                        "type": "String",
+                        "optional": false,
+                        "field": "fingerprint",
+                        "description": "<p>SolidEdge运行电脑或是设备的指纹</p>"
+                    },
+                    {
+                        "group": "Parameter",
+                        "type": "String",
+                        "optional": false,
+                        "field": "data",
+                        "description": "<p>调用库生成的解密内容</p>"
+                    }
+                ]
+            },
+            "examples": [
+                {
+                    "title": "Request-Example:",
+                    "content": "{\n\t\"modelCode\": \"xxxx\",\n\t\"sn\": \"xxxx\",\n\t\"fingerprint\":\"xxx\",\n\t\"data\":\"xxx\"\n}",
+                    "type": "json"
+                }
+            ]
+        },
+        "success": {
+            "examples": [
+                {
+                    "title": "Success-Response",
+                    "content": "{\n    \"status\": \"success\",\n    \"result\": \"\"\n}",
+                    "type": "json"
+                }
+            ]
+        },
+        "error": {
+            "fields": {
+                "Error 4xx": [
+                    {
+                        "group": "Error 4xx",
+                        "optional": false,
+                        "field": "serverErr",
+                        "description": "<p>表示服务器错误，挂在SN字段下</p>"
+                    },
+                    {
+                        "group": "Error 4xx",
+                        "optional": false,
+                        "field": "illegal",
+                        "description": "<p>表示不合法，挂在SN字段下</p>"
+                    },
+                    {
+                        "group": "Error 4xx",
+                        "optional": false,
+                        "field": "unknown",
+                        "description": "<p>表示未知错误，挂在SN字段下</p>"
+                    }
+                ]
+            },
+            "examples": [
+                {
+                    "title": "Error-Response:",
+                    "content": "{\n    \"status\": \"fail\",\n    \"result\": \"{\\\"SN\\\":\\\"illegal\\\"}\"\n    }\n}",
+                    "type": "json"
+                }
+            ]
+        },
+        "version": "0.0.0",
+        "filename": "services/ed.go",
+        "groupTitle": "EncryptDecrypt"
     }
 ]
 
