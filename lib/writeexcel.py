@@ -29,7 +29,7 @@ class WriteExcel():
         self.wb = load_workbook(self.filename)
         self.ws = self.wb.active
 
-    def write_data(self, row_n, value, re_t, re_d):
+    def write_data(self, row_n, value, re_t="", re_d=""):
         """
         写入测试结果
         :param row_n:数据所在行数
@@ -51,11 +51,11 @@ class WriteExcel():
             self.ws[L_n].font = font_RED
             self.ws.cell(row_n, 13, re_t)
             self.ws.cell(row_n, 14, re_d)
-            self.ws[L_n].font = font_RED
+            # self.ws[L_n].font = font_RED
         # self.ws.cell(row_n, 14, name)
         self.ws[L_n].alignment = align
-        self.ws[M_n].font = font1
-        self.ws[M_n].alignment = align
+        # self.ws[M_n].font = font1
+        # self.ws[M_n].alignment = align
         self.wb.save(self.filename)
 
     def write_case(self):

@@ -28,7 +28,7 @@ class Login():
     # h_dev = h
     h = {}
     h['X-Auth-AppId'] = '2d274d917e32a1188f39ba102bc378da'
-    body_data = {"loginType": "adminapi", "username": "victor@shining3d.com", "password": "111111", "rPwd": False,
+    body_data = {"loginType": "test123", "username": "victor@shining3d.com", "password": "111111", "rPwd": False,
                  "phoneArea": "86"}
     body = json.dumps(body_data)
 
@@ -37,7 +37,7 @@ class Login():
 
         re = self.s.request(method=self.method, url=host + self.api, headers=self.h, data=self.body)
         # print(re.text)
-        global cookie
+        # global cookie
         if host == host_t:
             token = re.json()['result']['token']
         elif host == host_d:

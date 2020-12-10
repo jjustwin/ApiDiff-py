@@ -118,11 +118,13 @@ def get_value(data, value):
             else:
                 v = v[0]
         # 使用jsonpath提值，成功返回一个值列表，不成功返回False
-        result = jsonpath.jsonpath(eval(data.replace("true","True").replace("false","False")), v)
+        result = jsonpath.jsonpath(eval(data.replace("true","True").replace("false","False").replace("null","None")), v)
         # 判断提取是否成功，成功就往全局数据池中添加下标对应的值
         if result:
             relvance[k.lower()] = result[index]
         else:
+            relvance[k.lower()] = ""
             relvance['FALSE'] = result
+
     # 返回全局变量池
     return relvance

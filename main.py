@@ -21,14 +21,7 @@ host_d = cf.get("server", "host_d")
 
 requests.packages.urllib3.disable_warnings()
 testData = ReadExcel(setting.SOURCE_FILE, "Sheet1").read_data()
-# 关系网ID
-tid = ''
-# 机构ID
-targetID = ''
-userID = ''
 
-# host_t = 'https://tapi.shining3d.com'
-# host_d = 'http://10.10.1.57:7080'
 relvance_t = {}
 relvance_d = {}
 
@@ -44,50 +37,35 @@ class apiDiff():
             rowNum = int(data['ID'].split("_")[2])
         except Exception as e:
             print(e)
-
+        global isSame
+        isSame = ''
         print("******* 正在请求第{0}个接口->:{1} API_URL->:{2} *********".format(rowNum, data['UseCase'], data['API']))
-        # print("请求方式: {0}，请求URL: {1}".format(data['method'], data['host1']))
-        # print("请求参数: {0}".format(data['params']))
-        # 发送请求
-
-        # token_t = Login().login(host1)
-        # token_d = Login().login(host2)
+        #采集微服务不需要token
         if data["module"] in ['采集微服务']:
             token_t = token_d = ''
         print("******* 正在请求测试环境接口 *********")
         re_t = SendRequests().sendRequests(self.s, token_t, host1, replace(data, relvance_t)).text
-        # re_t = SendRequests().sendRequests(self.s, token_t, host1, data).text
         print("******* 正在请求开发环境接口 *********")
         re_d = SendRequests().sendRequests(self.s, token_d, host2, replace(data, relvance_d)).text
-
-        if re_t.startswith("{") and re_d.startswith("{") and isinstance(loads(re_t), str):
-            if loads(re_d.get("status") == "success"):
-                if data["relvance"] != "":
-                    relvance_t.update(get_value(re_t, eval(data["relvance"])))
-                if data["relvance"] != "":
-                    relvance_d.update(get_value(re_d, eval(data["relvance"])))
-                if loads(re_t) == loads(re_d):
-                    print("接口返回一致======================")
-                    OK_data = "PASS"
-                    print("******* 正在请求第{0}个接口请求完成*********\n".format(rowNum))
-                    # print("用例测试结果:  {0}---->{1}".format(data['ID'], OK_data))
-                    WriteExcel(setting.TARGET_FILE).write_data(rowNum + 1, OK_data, 'PASS')
-                    return 'Pass'
-        if re_t.startswith("{"):
-            if data["relvance"] != "":
-                relvance_t.update(get_value(re_t, eval(data["relvance"])))
-        if re_t.startswith("{"):
-            if data["relvance"] != "":
-                relvance_d.update(get_value(re_d, eval(data["relvance"])))
+        if re_t == re_d:
+            isSame = 'PASS'
+            print("***********************接口返回一致*******************")
+        else:
+            isSame = 'FAIL'
+            print(f"请注意, {data['API']} 接口在两套环境中不一致")
         print(host1, "返回信息：%s" % re_t)
         print(host2, "返回信息：%s" % re_d)
-        print(f"请注意, {data['API']} 接口在两套环境中不一致", )
-        print("******* 第{0}个接口请求完成*********\n".format(rowNum))
-        NOT_data = "FAIL"
-        # print("用例测试结果:  {0}---->{1}".format(data['ID'], NOT_data))
-        WriteExcel(setting.TARGET_FILE).write_data(rowNum + 1, NOT_data, re_t, re_d)
-        return 'FAIL'
+        print("******* 第{0}个接口请求完成*********".format(rowNum))
+        print("=======================================================================================\n")
+        #excel中如果包含替换字段则取值赋给变量
+        if data["relvance"] != "":
+            if re_t.startswith("{"):
+                relvance_t.update(get_value(re_t, eval(data["relvance"])))
+            if re_d.startswith("{"):
+                relvance_d.update(get_value(re_d, eval(data["relvance"])))
 
+        WriteExcel(setting.TARGET_FILE).write_data(rowNum + 1, isSame, re_t, re_d)
+        return isSame
 
 if __name__ == '__main__':
     APIDIFF = apiDiff()
@@ -95,7 +73,7 @@ if __name__ == '__main__':
     token_d = Login().login(host_d)
     sum_pass = 0
     sum_fail = 0
-    for d in testData[:35]:
+    for d in testData[:]:
         result = APIDIFF.test_api(host_t, host_d, token_t, token_d, d)
         if result == 'PASS':
             sum_pass = sum_pass + 1
